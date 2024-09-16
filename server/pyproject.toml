@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "server-tap"
+name = "server"
 version = "0.1.0"
 description = ""
 authors = ["jasonang0210 <jasonang@dsaid.gov.sg>"]
@@ -10,6 +10,7 @@ python = "^3.11"
 flask = "^3.0.3"
 pydantic = "^2.9.1"
 sqlalchemy = "^2.0.34"
+flask-cors = "^5.0.0"
 
 
 [build-system]

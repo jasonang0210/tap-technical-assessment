@@ -29,8 +29,14 @@ class Database:
             session.add_all(new_db_objects)
             session.commit()
 
-    def get(self, db_model_class: Type[DatabaseModelType]) -> List[dict]:
+    def fetch_all(self, db_model_class: Type[DatabaseModelType]) -> List[dict]:
         with self.SessionFactory() as session:
             objects = session.query(db_model_class).all()
-            route_model_class = DATABASE_TO_WEB_MAPPING[db_model_class]
-            return [route_model_class.model_validate(object).model_dump() for object in objects]
+            web_model_class = DATABASE_TO_WEB_MAPPING[db_model_class]
+            return [web_model_class.model_validate(object).model_dump() for object in objects]
+        
+    def fetch_single(self, db_model_class: Type[DatabaseModelType], key: str) -> List[dict]:
+        with self.SessionFactory() as session:
+            object = session.query(db_model_class).get(key)
+            web_model_class = DATABASE_TO_WEB_MAPPING[db_model_class]
+            return web_model_class.model_validate(object).model_dump()

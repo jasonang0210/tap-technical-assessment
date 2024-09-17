@@ -11,10 +11,15 @@ class TeamWebModel(WebModel):
     registration_date: str
     group: str
 
-class MatchWebModel(WebModel):
+class TeamMatchWebModel(WebModel):
     model_config = ConfigDict(from_attributes=True)
 
     team_name: str
     goals: int
+class MatchWebModel(WebModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    team_matches: List[TeamMatchWebModel]
 
 WebModelType = TypeVar('WebModelType', bound=WebModel)

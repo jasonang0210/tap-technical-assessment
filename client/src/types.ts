@@ -15,3 +15,23 @@ export type TeamAPIData = {
     registration_date: string;
     group: string;
 }
+
+export type TeamMatchData = {
+    teamName: string;
+    goals: number;
+}
+
+export type MatchData = {
+    id: number;
+    teamMatches: TeamMatchData[];
+}
+
+export type TeamMatchAPIData = {
+    team_name: string;
+    goals: number;
+}
+
+export type MatchAPIData = {
+    id: number;
+    team_matches: TeamMatchAPIData[];
+}

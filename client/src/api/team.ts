@@ -4,7 +4,7 @@ import { TeamAPIData } from "@/types";
 
 export const TeamsAPIRoutes = {
     fetch: '/teams',
-    post: 'register'
+    post: '/register'
 }
 
 function TeamsAPI() {
@@ -20,7 +20,7 @@ function TeamsAPI() {
             teamSerializer.serialize
         ),
         postMultiple: (data: string) => handleRequest(
-            client.post(TeamsAPIRoutes.post, data)
+            client.post(TeamsAPIRoutes.post, {data: data})
         )
     }
 }

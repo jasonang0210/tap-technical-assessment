@@ -1,8 +1,9 @@
-import { teamsReducer } from '@/redux/slice'
+import { matchesReducer, teamsReducer } from '@/redux/slice'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 const rootReducer = combineReducers({
-  teams: teamsReducer
+  teams: teamsReducer,
+  matches: matchesReducer
 })
 
 export const store = configureStore({

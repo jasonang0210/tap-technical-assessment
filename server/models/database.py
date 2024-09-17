@@ -18,7 +18,7 @@ class TeamDatabaseModel(DatabaseModel):
     group: Mapped[String] = mapped_column(String, nullable=False)
     registration_date: Mapped[str] = mapped_column(String, nullable=False)
 
-    matches: Mapped[List["MatchDatabaseModel"]] = relationship("MatchDatabaseModel", secondary="team_match", back_populates="teams")
+    team_matches = relationship("TeamMatchDatabaseModel", back_populates="teams")
 
 """
 Stores the details of a particular team's match statistics
@@ -33,6 +33,9 @@ class TeamMatchDatabaseModel(DatabaseModel):
     match_id: Mapped[int] = mapped_column(Integer, ForeignKey('match.id'), primary_key=True)
     goals: Mapped[int] = mapped_column(Integer, nullable=False)
 
+    teams = relationship("TeamDatabaseModel", back_populates="team_matches")
+    matches = relationship("MatchDatabaseModel", back_populates="team_matches")
+
 """
 Used primarily just to identify a match
 id: uniquely generated match id
@@ -42,6 +45,6 @@ class MatchDatabaseModel(DatabaseModel):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
-    teams: Mapped[List["TeamDatabaseModel"]] = relationship("TeamDatabaseModel", secondary="team_match", back_populates="matches")
+    team_matches = relationship("TeamMatchDatabaseModel", back_populates="matches")
 
 DatabaseModelType = TypeVar('DatabaseModelType', bound=DatabaseModel)

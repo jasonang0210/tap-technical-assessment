@@ -1,9 +1,16 @@
-import { fetchTeams, postTeams } from "@/redux/actions";
-import { selectAllTeams } from "@/redux/selectors";
+import { fetchTeams, postTeams } from "@/redux/teams/actions";
+import { selectAllTeams } from "@/redux/teams/selectors";
 import { AppDispatch } from "@/store";
 import { Button, TextField } from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+const columns: GridColDef[] = [
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'registrationDate', headerName: 'Date of Registration', width: 130 },
+    { field: 'group', headerName: 'Group Number', width: 130 },
+  ];
 
 const TeamsPage = () => {
     const dispatch: AppDispatch = useDispatch()
@@ -32,16 +39,14 @@ const TeamsPage = () => {
             <Button variant="contained" onClick={submitData}>Submit</Button>
         </div>
         <hr />
-        <div>
-            {allTeams.map(team => (
-                <div key={team.name}>
-                    <div>Team Name: {team.name}</div>
-                    <div>Registration Date: {team.registrationDate}</div>
-                    <div>Group Number: {team.group}</div>
-                    <hr/>
-                </div>
-            ))}
-        </div>
+        <DataGrid
+            rows={allTeams}
+            columns={columns}
+            pageSizeOptions={[5, 10]}
+            checkboxSelection
+            sx={{ border: 0 }}
+            getRowId={row => row.name}
+        />
         </>
     );
 };

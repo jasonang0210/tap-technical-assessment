@@ -4,7 +4,6 @@ from typing import List, Tuple
 from models.route import TeamMatchRouteModel, MatchRouteModel
 from models.database import MatchDatabaseModel, TeamMatchDatabaseModel
 from models.web import MatchWebModel
-
 @singleton
 class MatchService:
     def __init__(self):

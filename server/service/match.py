@@ -1,42 +1,36 @@
-from database import Database
 from utils import singleton
 from typing import List, Tuple
 from models.route import TeamMatchRouteModel, MatchRouteModel
-from models.database import MatchDatabaseModel, TeamMatchDatabaseModel
 from models.web import MatchWebModel
-from models.database import db
+from database.match import MatchDatabase
+from database.team_match import TeamMatchDatabase
+
 @singleton
 class MatchService:
     def __init__(self):
-        self.db = Database()
+        self.match_db = MatchDatabase()
+        self.team_match_db = TeamMatchDatabase()
 
-    def add(self, matches: List[Tuple[TeamMatchRouteModel, TeamMatchRouteModel]]):
+    def post(self, matches: List[Tuple[TeamMatchRouteModel, TeamMatchRouteModel]]):
         for match in matches:
-            # for each match, create an empty match and obtain the id
-            match_id = self.db.add_single(MatchRouteModel(), MatchDatabaseModel, "id")
-            first_team, second_team = match
-            first_team.match_id = match_id
-            second_team.match_id = match_id
-            self.db.add_single(first_team, TeamMatchDatabaseModel)
-            self.db.add_single(second_team, TeamMatchDatabaseModel)
-            # TODO: not ideal now, might be better to consolidate and add in 1 single transaction
+            match_db_model = self.match_db.post_single(MatchRouteModel())
+            for team_match in match:
+                team_match.match_id = match_db_model.id
+            self.team_match_db.post_multiple(match)
+
+    def patch(self, id: int, match: Tuple[TeamMatchRouteModel, TeamMatchRouteModel]):
+        for team_match in match:
+            team_match.match_id = id
+            self.team_match_db.patch(team_match, {"match_id": id, "team_name": team_match.team_name})
+
+    def delete_all(self):
+        self.match_db.delete_all()
+        self.team_match_db.delete_all()
 
     def fetch_all(self):
-        return self.db.fetch_all(MatchDatabaseModel, MatchWebModel)
+        db_models = self.match_db.fetch_all()
+        return [MatchWebModel.model_validate(db_model).model_dump() for db_model in db_models]
     
-    def delete_all(self):
-        db.session.query(MatchDatabaseModel).delete()
-        db.session.query(TeamMatchDatabaseModel).delete()
-        db.session.commit()
-        
-    def patch(self, id: int, team_matches: Tuple[TeamMatchRouteModel, TeamMatchRouteModel]):
-        for team_match in team_matches:
-            team_match.match_id = id
-            (
-                db.session
-                    .query(TeamMatchDatabaseModel)
-                    .filter(TeamMatchDatabaseModel.match_id == id)
-                    .filter(TeamMatchDatabaseModel.team_name == team_match.team_name)
-                    .update(team_match.model_dump())
-            )
-        db.session.commit()
+    def fetch_single(self, id: str):
+        db_model = self.match_db.fetch_single("id", id)
+        return MatchWebModel.model_validate(db_model).model_dump()

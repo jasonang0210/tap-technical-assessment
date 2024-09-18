@@ -12,7 +12,8 @@ class TeamRouteModel(RouteModel):
     @classmethod
     def parse_single(cls, data: str) -> "TeamRouteModel":
         parts = data.split(" ")
-        assert len(parts) == 3
+        if len(parts) != 3:
+            raise ValueError("Invalid format. Ensure that input data is in the format '<team_name> <registration_date> <group_number>'")
 
         name, registration_date, group = parts
         return cls(
@@ -33,7 +34,8 @@ class TeamMatchRouteModel(RouteModel):
     @classmethod
     def parse_single(cls, data: str) -> Tuple["TeamMatchRouteModel", "TeamMatchRouteModel"]:
         parts = data.split(" ")
-        assert len(parts) == 4
+        if len(parts) != 4:
+            raise ValueError("Invalid format. Ensure that input data is in the format '<teamA_name> <teamB_name> <teamA_goals> <teamB_goals>'")
 
         return (
             cls(

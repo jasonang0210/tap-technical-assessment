@@ -26,26 +26,21 @@ if __name__ == '__main__':
 team_service = TeamService()
 match_service = MatchService()
 
-# from sqlalchemy.engine import Engine
-# from sqlalchemy import event
-
-# @event.listens_for(Engine, "connect")
-# def set_sqlite_pragma(dbapi_connection, connection_record):
-#        cursor = dbapi_connection.cursor()
-#        cursor.execute("PRAGMA foreign_keys=ON")
-#        cursor.close()
+# TEAMS
 
 @app.route("/teams", methods=['POST'])
 def post_teams():
     data = request.get_json()["data"]
     teams = TeamRouteModel.parse_multiple(data)
-    team_service.add(teams)
+    team_service.post(teams)
     return ""
 
 @app.route("/teams", methods=['GET'])
 def fetch_teams():
-    objects = team_service.fetch_all()
-    return jsonify(objects)
+    ranked = request.args.get('ranked', default='false', type=str)
+    if ranked == 'true':
+        return jsonify(team_service.fetch_ranked())
+    return jsonify(team_service.fetch_all())
 
 @app.route("/teams/<name>", methods=['GET'])
 def fetch_team(name):
@@ -59,11 +54,13 @@ def patch_team(name):
     team_service.patch(name, team)
     return ""
 
+# MATCHES
+
 @app.route("/matches", methods=['POST'])
 def post_matches():
     data = request.get_json()["data"]
     team_matches = TeamMatchRouteModel.parse_multiple(data)
-    match_service.add(team_matches)
+    match_service.post(team_matches)
     return ""
 
 @app.route("/matches/<id>", methods=['PATCH'])
@@ -78,10 +75,7 @@ def fetch_matches():
     objects = match_service.fetch_all()
     return jsonify(objects)
 
-@app.route("/rankings", methods=['GET'])
-def fetch_rankings():
-    objects = team_service.fetch_ranked()
-    return jsonify(objects)
+# CLEAR ALL
 
 @app.route("/delete_all", methods=['POST'])
 def delete_all():

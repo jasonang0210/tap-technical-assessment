@@ -1,15 +1,15 @@
-import { rankingsAPI } from "@/api/ranking";
+import { teamsAPI } from "@/api/team";
 import { isSuccessful } from "@/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchRankings = createAsyncThunk(
-    'teams/fetchRankings',
+    'rankings/fetchRankings',
     async (_, {rejectWithValue}) => {
         const {
             status,
             data,
             error
-        } = await rankingsAPI.fetchAll()
+        } = await teamsAPI.fetchRanked()
         if (isSuccessful(status)) {
             return data
         }

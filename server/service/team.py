@@ -1,100 +1,46 @@
-from database import Database
 from utils import singleton
-from typing import List, Tuple
+from typing import List
 from models.route import TeamRouteModel
-from models.database import TeamDatabaseModel, TeamMatchDatabaseModel
-from models.web import TeamWebModel, TeamDetailedWebModel, MatchDetailedWebModel, RankedGroupWebModel
-from sqlalchemy.orm import aliased
-from sqlalchemy import func, case, desc, asc
-from models.database import db
+from models.web import TeamWebModel, TeamDetailedWebModel, RankedGroupWebModel
+from database.team import TeamDatabase
 
 @singleton
 class TeamService:
     def __init__(self):
-        self.db = Database()
+        self.team_db = TeamDatabase()
 
-    def add(self, teams: List[TeamRouteModel]):
-        self.db.add_all(teams, TeamDatabaseModel)
-
-    def fetch_all(self):
-        return self.db.fetch_all(TeamDatabaseModel, TeamWebModel)
-    
-    def fetch_single(self, name: str):
-        return self.db.fetch_single("name", name, TeamDatabaseModel, TeamWebModel)
-    
-    def fetch_detailed(self, name: str) -> TeamDetailedWebModel:
-        OpponentMatchDatabaseModel = aliased(TeamMatchDatabaseModel)
-
-        # TODO: clean this up!
-        matches = (
-            db.session.query(
-                TeamMatchDatabaseModel.goals.label("team_goals"),
-                OpponentMatchDatabaseModel.team_name.label("opponent_team_name"),
-                OpponentMatchDatabaseModel.goals.label("opponent_goals"),
-                case(
-                    (TeamMatchDatabaseModel.goals > OpponentMatchDatabaseModel.goals, "Win"),
-                    (TeamMatchDatabaseModel.goals < OpponentMatchDatabaseModel.goals, "Loss"),
-                    else_="Draw"
-                ).label("outcome")
-            )
-            .join(TeamDatabaseModel.team_matches)
-            .join(OpponentMatchDatabaseModel, TeamMatchDatabaseModel.match_id == OpponentMatchDatabaseModel.match_id)
-            .filter(TeamMatchDatabaseModel.team_name == name)
-            .filter(TeamMatchDatabaseModel.team_name != OpponentMatchDatabaseModel.team_name)
-        ).all()
-
-        return {
-            **self.fetch_single(name),
-            "matches": [MatchDetailedWebModel.model_validate(object).model_dump() for object in matches]
-        }
-    
-    def fetch_ranked(self):
-        OpponentMatchDatabaseModel = aliased(TeamMatchDatabaseModel)
-
-        # TODO: clean this up! should be able to abstract out to combine with fetch_detailed somewhat
-        subquery = (
-            db.session.query(
-                TeamDatabaseModel.name,
-                TeamDatabaseModel.group,
-                TeamDatabaseModel.registration_date,
-                func.sum(TeamMatchDatabaseModel.goals).label("total_goals"),
-                func.sum(
-                    case(
-                        (TeamMatchDatabaseModel.goals > OpponentMatchDatabaseModel.goals, 3),
-                        (TeamMatchDatabaseModel.goals == OpponentMatchDatabaseModel.goals, 1),
-                        else_=0
-                    )
-                ).label("total_points"),
-                func.sum(
-                    case(
-                        (TeamMatchDatabaseModel.goals > OpponentMatchDatabaseModel.goals, 5),
-                        (TeamMatchDatabaseModel.goals == OpponentMatchDatabaseModel.goals, 3),
-                        else_=1
-                    )
-                ).label("total_alt_points"),
-            )
-            .join(TeamDatabaseModel.team_matches)
-            .join(OpponentMatchDatabaseModel, TeamMatchDatabaseModel.match_id == OpponentMatchDatabaseModel.match_id)
-            .filter(TeamMatchDatabaseModel.team_name != OpponentMatchDatabaseModel.team_name)
-            .group_by(TeamDatabaseModel.name, TeamDatabaseModel.group, TeamDatabaseModel.registration_date)
-            .order_by(
-                desc("total_points"),
-                desc("total_goals"),
-                desc("total_alt_points"),
-                asc("registration_date")
-            )
-        )
-
-        # TODO: find a way to make this variable, instead of hard coded
-        groups = ["1", "2"]
-        return [RankedGroupWebModel(group=group, teams=subquery.filter(TeamDatabaseModel.group == group).all()).model_dump() for group in groups]
-    
-    def delete_all(self):
-        db.session.query(TeamDatabaseModel).delete()
-        db.session.commit()
+    def post(self, teams: List[TeamRouteModel]):
+        self.team_db.post_multiple(teams)
 
     def patch(self, name: str, team: TeamRouteModel):
-        db.session.query(TeamDatabaseModel).filter(TeamDatabaseModel.name == name).update(team.model_dump())
-        db.session.commit()
+        self.team_db.patch(team, {"name": name})
+
+    def delete_all(self):
+        self.team_db.delete_all()
+
+    def fetch_all(self):
+        db_models = self.team_db.fetch_all()
+        return [TeamWebModel.model_validate(db_model).model_dump() for db_model in db_models]
+    
+    def fetch_single(self, name: str):
+        db_model = self.team_db.fetch_single("name", name)
+        return TeamWebModel.model_validate(db_model).model_dump()
+    
+    def fetch_ranked(self):
+        # TODO: might need a group model, to handle for weird group numbers like 100 etc
+        # but assumption for now is 1, 2
+        groups = ["1", "2"]
+        db_models = [{
+            "group": group,
+            "teams": self.team_db.fetch_ranked(group)
+        } for group in groups]
+        return [RankedGroupWebModel.model_validate(db_model).model_dump() for db_model in db_models]
+    
+    def fetch_detailed(self, name: str):
+        db_model = {
+            **self.fetch_single(name),
+            "matches": self.team_db.fetch_team_matches(name)
+        }
+        return TeamDetailedWebModel.model_validate(db_model).model_dump()
 
             

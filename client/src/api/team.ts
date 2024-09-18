@@ -1,30 +1,30 @@
 import { BaseAPI, handleRequest } from "@/api/base";
-import { teamSerializer } from "@/api/serializer";
-import { TeamAPIData } from "@/types";
+import { rankingSerializer, teamSerializer } from "@/api/serializer";
+import { RankedGroupAPIData, TeamAPIData } from "@/types";
 
-export const TeamsAPIRoutes = {
-    fetch: '/teams',
-    post: '/teams',
-    patch: '/teams'
-}
+export const TeamsAPIRoutes = 'teams'
 
 function TeamsAPI() {
     const client = BaseAPI();
 
     return {
         fetchAll: () => handleRequest(
-            client.get(TeamsAPIRoutes.fetch),
+            client.get(TeamsAPIRoutes),
             (apiData: TeamAPIData[]) => apiData.map(apiObj => teamSerializer.serialize(apiObj))
         ),
+        fetchRanked: () => handleRequest(
+            client.get(`${TeamsAPIRoutes}?ranked=true`),
+            (apiData: RankedGroupAPIData[]) => apiData.map(apiObj => rankingSerializer.serialize(apiObj))
+        ),
         fetchSingle: (name: string) => handleRequest(
-            client.get(`${TeamsAPIRoutes.fetch}/${name}`),
+            client.get(`${TeamsAPIRoutes}/${name}`),
             teamSerializer.serialize
         ),
         postMultiple: (data: string) => handleRequest(
-            client.post(TeamsAPIRoutes.post, {data: data})
+            client.post(TeamsAPIRoutes, {data: data})
         ),
         patch: (name: string, data: string) => handleRequest(
-            client.patch(`${TeamsAPIRoutes.patch}/${name}`, {data: data})
+            client.patch(`${TeamsAPIRoutes}/${name}`, {data: data})
         )
     }
 }

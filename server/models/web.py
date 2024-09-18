@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict, Field
-from typing import List, TypeVar, Optional, Tuple
+from typing import List, TypeVar, Optional
 
 class WebModel(BaseModel):
     pass

@@ -1,4 +1,4 @@
-from typing import List, TypeVar
+from typing import TypeVar
 from sqlalchemy import Integer, String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, relationship, mapped_column, Mapped
 from flask_sqlalchemy import SQLAlchemy

@@ -1,6 +1,6 @@
 import { BaseAPI, handleRequest } from "@/api/base";
 import { rankingSerializer } from "@/api/serializer";
-import { RankingAPIData } from "@/types";
+import { RankedGroupAPIData } from "@/types";
 
 export const RankingsAPIRoutes = {
     fetch: '/rankings',
@@ -12,7 +12,7 @@ function RankingsAPI() {
     return {
         fetchAll: () => handleRequest(
             client.get(RankingsAPIRoutes.fetch),
-            (apiData: RankingAPIData[]) => apiData.map(apiObj => rankingSerializer.serialize(apiObj))
+            (apiData: RankedGroupAPIData[]) => apiData.map(apiObj => rankingSerializer.serialize(apiObj))
         ),
     }
 }

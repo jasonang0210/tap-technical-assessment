@@ -4,7 +4,7 @@ import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolki
 
 // MATCHES
 
-export const matchesAdapter = createEntityAdapter();
+export const matchesAdapter = createEntityAdapter<MatchData>();
 export const matchesInitialState = matchesAdapter.getInitialState({
     isLoading: false
 })
@@ -39,6 +39,7 @@ const matchesSlice = createSlice({
             state.isLoading = false;
             console.log(action)
         })
+        
     }
 
 })

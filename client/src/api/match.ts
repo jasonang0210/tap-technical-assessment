@@ -4,7 +4,8 @@ import { MatchAPIData } from "@/types";
 
 export const MatchesAPIRoutes = {
     fetch: '/matches',
-    post: '/record',
+    post: '/matches',
+    patch: '/matches'
 }
 
 function MatchesAPI() {
@@ -17,6 +18,9 @@ function MatchesAPI() {
         ),
         postMultiple: (data: string) => handleRequest(
             client.post(MatchesAPIRoutes.post, {data: data})
+        ),
+        patch: (id: number, data: string) => handleRequest(
+            client.patch(`${MatchesAPIRoutes.patch}/${id}`, {data: data})
         )
     }
 }

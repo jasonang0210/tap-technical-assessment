@@ -4,7 +4,8 @@ import { TeamAPIData } from "@/types";
 
 export const TeamsAPIRoutes = {
     fetch: '/teams',
-    post: '/register'
+    post: '/teams',
+    patch: '/teams'
 }
 
 function TeamsAPI() {
@@ -21,6 +22,9 @@ function TeamsAPI() {
         ),
         postMultiple: (data: string) => handleRequest(
             client.post(TeamsAPIRoutes.post, {data: data})
+        ),
+        patch: (name: string, data: string) => handleRequest(
+            client.patch(`${TeamsAPIRoutes.patch}/${name}`, {data: data})
         )
     }
 }

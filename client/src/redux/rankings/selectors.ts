@@ -1,9 +1,8 @@
 import { RootState } from "@/store";
-import { RankingData } from "@/types";
 import { createSelector } from "@reduxjs/toolkit";
 
 export const selectAllRankings = createSelector(
     (state: RootState) => state.rankings.entities,
     (state: RootState) => state.rankings.ids,
-    (rankings, ids) => ids.map(id => rankings[id]) as RankingData[]
+    (rankings, ids) => ids.map(id => rankings[id])
 )

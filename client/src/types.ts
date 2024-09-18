@@ -8,6 +8,7 @@ export interface Response<O = Record<string, unknown>> {
 
 export type MatchOutcomeData = {
     teamGoals: number;
+    opponentTeamName: string;
     opponentGoals: number;
     outcome: string;
 }
@@ -18,6 +19,9 @@ export type TeamData = {
     registrationDate: string;
     group: string;
     matches?: MatchOutcomeData[];
+    totalPoints?: number;
+    totalGoals?: number;
+    totalAltPoints?: number;
 }
 
 export type TeamMatchData = {
@@ -30,16 +34,16 @@ export type MatchData = {
     teamMatches: TeamMatchData[];
 }
 
-export type RankingData = TeamData & {
-    totalPoints: number;
-    totalGoals: number;
-    totalAltPoints: number;
+export type RankedGroupData = {
+    group: string;
+    teams: TeamData[]
 }
 
 // API SCHEMA
 
 export type MatchOutcomeAPIData = {
     team_goals: number;
+    opponent_team_name: string;
     opponent_goals: number;
     outcome: string;
 }
@@ -49,6 +53,9 @@ export type TeamAPIData = {
     registration_date: string;
     group: string;
     matches?: MatchOutcomeAPIData[];
+    total_points?: number;
+    total_goals?: number;
+    total_alt_points?: number;
 }
 
 export type TeamMatchAPIData = {
@@ -61,8 +68,7 @@ export type MatchAPIData = {
     team_matches: TeamMatchAPIData[];
 }
 
-export type RankingAPIData = TeamAPIData & {
-    total_points: number;
-    total_goals: number;
-    total_alt_points: number;
+export type RankedGroupAPIData = {
+    group: string;
+    teams: TeamAPIData[]
 }

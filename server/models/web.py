@@ -1,5 +1,5 @@
-from pydantic import BaseModel, ConfigDict
-from typing import List, TypeVar
+from pydantic import BaseModel, ConfigDict, Field
+from typing import List, TypeVar, Optional, Tuple
 
 class WebModel(BaseModel):
     pass
@@ -10,6 +10,9 @@ class TeamWebModel(WebModel):
     name: str
     registration_date: str
     group: str
+    total_points: Optional[int] = Field(default=None) 
+    total_goals: Optional[int] = Field(default=None)
+    total_alt_points: Optional[int] = Field(default=None)
 
 class TeamMatchWebModel(WebModel):
     model_config = ConfigDict(from_attributes=True)
@@ -22,17 +25,17 @@ class MatchWebModel(WebModel):
     id: int
     team_matches: List[TeamMatchWebModel]
 
-class RankingWebModel(TeamWebModel):
+class RankedGroupWebModel(WebModel):
     model_config = ConfigDict(from_attributes=True)
-
-    total_points: int
-    total_goals: int
-    total_alt_points: int
+    
+    group: str
+    teams: List[TeamWebModel]
 
 class MatchDetailedWebModel(WebModel):
     model_config = ConfigDict(from_attributes=True)
     
     team_goals: int
+    opponent_team_name: str
     opponent_goals: int
     outcome: str
 class TeamDetailedWebModel(TeamWebModel):

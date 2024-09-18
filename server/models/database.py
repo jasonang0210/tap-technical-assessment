@@ -14,6 +14,7 @@ registration_date: registration date, stored in DD/MM
 class TeamDatabaseModel(DatabaseModel):
     __tablename__ = 'team'
 
+    # assume to be not editable
     name: Mapped[str] = mapped_column(String, primary_key=True)
     group: Mapped[String] = mapped_column(String, nullable=False)
     registration_date: Mapped[str] = mapped_column(String, nullable=False)
@@ -29,8 +30,8 @@ goals: how many goals scored by <team_name> in <match_id>
 class TeamMatchDatabaseModel(DatabaseModel):
     __tablename__ = 'team_match'
 
-    team_name: Mapped[str] = mapped_column(String, ForeignKey('team.name'), primary_key=True)
-    match_id: Mapped[int] = mapped_column(Integer, ForeignKey('match.id'), primary_key=True)
+    team_name: Mapped[str] = mapped_column(String, ForeignKey('team.name', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True)
+    match_id: Mapped[int] = mapped_column(Integer, ForeignKey('match.id', ondelete='CASCADE'), primary_key=True)
     goals: Mapped[int] = mapped_column(Integer, nullable=False)
 
     teams = relationship("TeamDatabaseModel", back_populates="team_matches")

@@ -31,6 +31,7 @@ const TeamPage = () => {
             {team.matches.map((match, index) => (
                 <div key={index}>
                     <div>Team Goal: {match.teamGoals}</div>
+                    <div>Opponent Team: {match.opponentTeamName}</div>
                     <div>Opponent Goal: {match.opponentGoals}</div>
                     <div>Outcome: {match.outcome}</div>
                 </div>

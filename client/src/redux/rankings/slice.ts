@@ -1,9 +1,9 @@
 import { fetchRankings } from "./actions";
-import { RankingData } from "@/types";
+import { RankedGroupData } from "@/types";
 import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const rankingsAdapter = createEntityAdapter({
-    selectId: (ranking: RankingData) => ranking.name
+    selectId: (ranking: RankedGroupData) => ranking.group
 });
 export const rankingsInitialState = rankingsAdapter.getInitialState({
     isLoading: false
@@ -18,7 +18,7 @@ const rankingsSlice = createSlice({
         .addCase(fetchRankings.pending, (state) => {
             state.isLoading = true;
         })
-        .addCase(fetchRankings.fulfilled, (state, action: PayloadAction<RankingData[]>) => {
+        .addCase(fetchRankings.fulfilled, (state, action: PayloadAction<RankedGroupData[]>) => {
             state.isLoading = false;
             rankingsAdapter.upsertMany(state, action.payload)
         })

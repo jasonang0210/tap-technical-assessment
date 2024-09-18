@@ -1,16 +1,12 @@
+import EditTeam from "@/components/EditTeam";
 import { fetchTeams, postTeams } from "@/redux/teams/actions";
 import { selectAllTeams } from "@/redux/teams/selectors";
 import { AppDispatch } from "@/store";
-import { Button, TextField } from "@mui/material";
+import { Button, Drawer, TextField } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { isNil } from "lodash";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'registrationDate', headerName: 'Date of Registration', width: 130 },
-    { field: 'group', headerName: 'Group Number', width: 130 },
-  ];
 
 const TeamsPage = () => {
     const dispatch: AppDispatch = useDispatch()
@@ -26,6 +22,24 @@ const TeamsPage = () => {
     const submitData = () => {
         dispatch(postTeams(data))
     }
+
+    const [name, setName] = useState<string | null>(null)
+
+    const columns: GridColDef[] = [
+        { field: 'name', headerName: 'Name', width: 200 },
+        { field: 'registrationDate', headerName: 'Date of Registration', width: 130 },
+        { field: 'group', headerName: 'Group Number', width: 130 },
+        { 
+            field: 'action',
+            headerName: 'Action',
+            width: 130,
+            renderCell: (params) => (
+                <Button onClick={() => setName(params.row.name)}>
+                    Edit
+                </Button>
+            )
+        },
+      ];
 
     return (
         <>
@@ -47,6 +61,9 @@ const TeamsPage = () => {
             sx={{ border: 0 }}
             getRowId={row => row.name}
         />
+        <Drawer open={!isNil(name)} onClose={() => setName(null)}>
+           {!isNil(name) && <EditTeam name={name} />}
+        </Drawer>
         </>
     );
 };

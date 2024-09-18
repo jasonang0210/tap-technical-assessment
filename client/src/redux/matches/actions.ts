@@ -31,3 +31,18 @@ export const postMatches = createAsyncThunk(
         return rejectWithValue(error)
     }
 )
+
+export const patchMatches = (id: number, data: string) => createAsyncThunk(
+    'teams/patchMatches',
+    async (_, {rejectWithValue}) => {
+        const {
+            status,
+            error
+        } = await matchesAPI.patch(id, data)
+        if (isSuccessful(status)) {
+            console.log("success")
+            return null
+        }
+        return rejectWithValue(error)
+    }
+)()

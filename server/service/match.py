@@ -22,3 +22,22 @@ class MatchService:
 
     def fetch_all(self):
         return self.db.fetch_all(MatchDatabaseModel, MatchWebModel)
+    
+    def delete_all(self):
+        with self.db.SessionFactory() as session:
+            session.query(MatchDatabaseModel).delete()
+            session.query(TeamMatchDatabaseModel).delete()
+            session.commit()
+        
+    def patch(self, id: int, team_matches: Tuple[TeamMatchRouteModel, TeamMatchRouteModel]):
+        with self.db.SessionFactory() as session:
+            for team_match in team_matches:
+                team_match.match_id = id
+                (
+                    session
+                        .query(TeamMatchDatabaseModel)
+                        .filter(TeamMatchDatabaseModel.match_id == id)
+                        .filter(TeamMatchDatabaseModel.team_name == team_match.team_name)
+                        .update(team_match.model_dump())
+                )
+            session.commit()

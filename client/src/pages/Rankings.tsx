@@ -26,14 +26,21 @@ const RankingsPage = () => {
 
     return (
         <>
-            <DataGrid
-                rows={allRankings}
+        {allRankings.map(ranking => (
+            <>
+                <div>Group: {ranking.group}</div>
+                <DataGrid
+                rows={ranking.teams}
                 columns={columns}
                 pageSizeOptions={[5, 10]}
                 checkboxSelection
                 sx={{ border: 0 }}
                 getRowId={row => row.name}
             />
+            </>
+        )
+            
+        )}
         </>
     );
 };

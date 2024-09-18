@@ -10,6 +10,8 @@ import TeamPage from '@/pages/Team';
 import { darkTheme, lightTheme } from '@/theme';
 import { useMemo } from 'react';
 import Layout from '@/Layout';
+import { SnackbarProvider } from 'notistack';
+import Notification from '@/components/Notification';
 
 const router = createBrowserRouter([
   {
@@ -45,7 +47,10 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
+        <SnackbarProvider maxSnack={3}>
+          <Notification />
           <RouterProvider router={router} />
+        </SnackbarProvider>
       </Provider>
     </ThemeProvider>
   )

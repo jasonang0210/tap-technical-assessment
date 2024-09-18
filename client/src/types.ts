@@ -4,6 +4,25 @@ export interface Response<O = Record<string, unknown>> {
     error?: string
 }
 
+export interface PatchTeamArgs {
+    name: string;
+    data: string;
+}
+export interface PatchMatchArgs {
+    id: number;
+    data: string;
+}
+
+export type NotificationData = {
+    status: string;
+    message: string;
+}
+
+export type NotificationStore = {
+    queue: NotificationData[]
+}
+
+
 // CLIENT SCHEMA
 
 export type MatchOutcomeData = {

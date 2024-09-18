@@ -1,4 +1,5 @@
 import { teamsAPI } from "@/api/team";
+import { PatchTeamArgs } from "@/types";
 import { isSuccessful } from "@/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -40,24 +41,22 @@ export const postTeams = createAsyncThunk(
             error
         } = await teamsAPI.postMultiple(data)
         if (isSuccessful(status)) {
-            console.log("success")
-            return null
+            return {status, message: "Teams are successfully created."}
         }
-        return rejectWithValue(error)
+        return rejectWithValue({status, message: error})
     }
 )
 
-export const patchTeams = (name: string, data: string) => createAsyncThunk(
+export const patchTeams = createAsyncThunk(
     'teams/patchTeams',
-    async (_, {rejectWithValue}) => {
+    async ({name, data}: PatchTeamArgs, {rejectWithValue}) => {
         const {
             status,
             error
         } = await teamsAPI.patch(name, data)
         if (isSuccessful(status)) {
-            console.log("success")
-            return null
+            return {status, message: `Team ${name} successfully patched.`}
         }
-        return rejectWithValue(error)
+        return rejectWithValue({status, message: error})
     }
-)()
+)

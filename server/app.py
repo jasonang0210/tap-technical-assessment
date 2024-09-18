@@ -9,7 +9,7 @@ import os
 from models.database import db, migrate
 
 app = Flask(__name__)
-CORS(app, origins='http://localhost:3001')  # Allow CORS for this origin
+CORS(app, origins=['http://localhost:3001'])  # Allow CORS for this origin
 
 load_dotenv()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
@@ -25,6 +25,14 @@ if __name__ == '__main__':
 
 team_service = TeamService()
 match_service = MatchService()
+
+@app.errorhandler(ValueError)
+def handle_value_error(error):
+    response = {
+        "error": "ValueError",
+        "message": str(error)
+    }
+    return jsonify(response), 400
 
 # TEAMS
 
@@ -77,8 +85,8 @@ def fetch_matches():
 
 # CLEAR ALL
 
-@app.route("/delete_all", methods=['POST'])
-def delete_all():
+@app.route("/clear_database", methods=['POST'])
+def clear_database():
     team_service.delete_all()
     match_service.delete_all()
     return ""

@@ -37,11 +37,11 @@ class Database(Generic[RouteModelType, DatabaseModelType]):
         return new_db_objects
     
     def patch(self, object: RouteModelType, filters: Dict[str, Union[str, int]]):
-        self.session.query(self.db_model_class).filter(**filters).update(object.model_dump)
+        self.session.query(self.db_model_class).filter_by(**filters).update(object.model_dump())
         self.session.commit()
 
     def fetch_all(self):
-        return self.session.query(self.db_model_class).all()
+        return self.session.query(self.db_model_class).order_by("id").all()
         
     def fetch_single(self, key: str, value: str):
         return self.session.query(self.db_model_class).filter(getattr(self.db_model_class, key) == value).first()

@@ -1,7 +1,7 @@
 import { fetchTeam } from "@/redux/teams/actions";
 import { selectTeam, selectTeamIsLoading } from "@/redux/teams/selectors";
 import { AppDispatch } from "@/store";
-import { CircularProgress } from "@mui/material";
+import { Box, Chip, CircularProgress } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { isNil } from "lodash";
 import { useEffect } from "react";
@@ -9,10 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const columns: GridColDef[] = [
-    { field: 'opponentTeamName', headerName: 'Opponent', width: 130 },
-    { field: 'teamGoals', headerName: 'Goals Scored', width: 130 },
-    { field: 'opponentGoals', headerName: 'Goals Conceded', width: 130 },
-    { field: 'outcome', headerName: 'Outcome', width: 130 }
+    { field: 'opponentTeamName', headerName: 'Opponent', flex: 1 },
+    { field: 'teamGoals', headerName: 'Goals Scored', flex: 1 },
+    { field: 'opponentGoals', headerName: 'Goals Conceded', flex: 1 },
+    { field: 'outcome', headerName: 'Outcome', flex: 1 }
   ];
 
 const TeamPage = () => {
@@ -32,19 +32,42 @@ const TeamPage = () => {
     }
 
     return (
-        <>
-            <div>Team Name: {team.name}</div>
-            <div>Registration Date: {team.registrationDate}</div>
-            <div>Group Number: {team.group}</div>
+        <Box display="flex" flexDirection="column">
+            <Box display="grid" gridTemplateColumns="150px 3fr" gridTemplateRows="auto auto auto" gap={2} m={2}>
+                <Box>Team Name:</Box>
+                <Box>
+                    <Chip label={team.name} color="primary" variant="outlined"/>
+                </Box>
+                <Box>Registration Date:</Box>
+                <Box>
+                    <Chip label={team.registrationDate} color="success" variant="outlined" />
+                </Box>
+                <Box>Group Number:</Box>
+                <Box>
+                    <Chip label={team.group} color="error" variant="outlined"/>
+                </Box>
+            </Box>
+            <Box alignSelf="center">Matches Played</Box>
             <DataGrid
                 rows={team.matches ?? []}
                 columns={columns}
-                pageSizeOptions={[5, 10]}
-                checkboxSelection
-                sx={{ border: 0 }}
                 getRowId={row => row.opponentTeamName}
+                autoHeight
+                disableColumnMenu
+                disableColumnSorting
+                hideFooterPagination
+                isRowSelectable={() => false}
+                sx={{
+                    border: 0,
+                    m: 2,
+                    fontFamily: "Montserrat, sans-serif", 
+                    fontSize: 14,                    
+                    '& .MuiDataGrid-columnHeaders': {
+                        fontWeight: 'bold',           
+                    },
+                }}
             />
-        </>
+        </Box>
     );
 };
 

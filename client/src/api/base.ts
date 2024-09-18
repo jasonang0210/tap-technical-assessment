@@ -24,10 +24,24 @@ export async function handleRequest<I, O>(
         data: !isNil(serializer) ? serializer(data) : undefined
     }))
     .catch((error: AxiosError) => {
-        const {response, message} = error;
+        const {response } = error;
+        const data = response?.data as { message: string }
+        const message = data.message
         return {
             status: String(response?.status ?? 500),
             error: message
         }
     })
 }
+
+function GeneralAPI() {
+    const client = BaseAPI();
+
+    return {
+        clearDatabase: () => handleRequest(
+            client.post('/clear_database')
+        ),
+    }
+}
+
+export const generalAPI = GeneralAPI()

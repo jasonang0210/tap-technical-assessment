@@ -1,26 +1,34 @@
-import { BaseAPI, handleRequest } from "@/api/base"
-import { Button } from "@mui/material"
-import { Link, Outlet } from "react-router-dom"
+import ClearDatabase from '@/components/ClearDatabase';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import { Link, Outlet } from 'react-router-dom';
+
 
 const Layout = () => {
 
-    const client = BaseAPI()
-
-    return (
-        <>
-                <div>
-                    <Link to="/" replace>Ranking</Link> 
-                </div>
-                <div>
+  return (
+    <Box>
+        <AppBar position="static">
+            <Toolbar>
+                <Box mr={5}>
+                    <Link to="/" replace>Ranking</Link>
+                </Box>
+                <Box mr={5}>
                     <Link to="/teams" replace>Teams</Link>
-                </div>
-                <div>
+                </Box>
+                <Box mr={5}>
                     <Link to="/matches" replace>Matches</Link>
-                </div>
-                <Button onClick={() => handleRequest(client.post('/delete_all'))}>Delete All</Button>
+                </Box>
+                <Box ml="auto">
+                    <ClearDatabase />
+                </Box>
+            </Toolbar>
+        </AppBar>
+        <Box p={5}>
             <Outlet />
-        </>
-    )
+        </Box>
+    </Box>
+  );
 }
-
-export default Layout
+export default Layout;

@@ -8,26 +8,13 @@ export const teamsAdapter = createEntityAdapter({
     selectId: (team: TeamData) => team.name
 });
 export const teamsInitialState = teamsAdapter.getInitialState({
-    isLoading: false
+    isLoading: false,
 })
 
 const teamsSlice = createSlice({
     name: 'teams',
     initialState: teamsInitialState,
-    reducers: {
-        postTeams: (
-            state,
-            action: PayloadAction<TeamData>
-        ) => {
-            teamsAdapter.addOne(state, action.payload)
-        },
-        patchTeams: (
-            state,
-            action: PayloadAction<TeamData>
-        ) => {
-            teamsAdapter.upsertOne(state, action.payload)
-        }
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
         .addCase(fetchTeams.pending, (state) => {
@@ -56,10 +43,5 @@ const teamsSlice = createSlice({
     }
 
 })
-
-export const {
-    postTeams,
-    patchTeams
-} = teamsSlice.actions
 
 export const teamsReducer = teamsSlice.reducer;

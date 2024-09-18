@@ -25,7 +25,7 @@ function TeamsAPI() {
         ),
         patch: (name: string, data: string) => handleRequest(
             client.patch(`${TeamsAPIRoutes}/${name}`, {data: data})
-        )
+        ),
     }
 }
 

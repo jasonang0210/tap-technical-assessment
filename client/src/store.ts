@@ -2,11 +2,13 @@ import { teamsReducer } from '@/redux/teams/slice'
 import { matchesReducer } from '@/redux/matches/slice'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { rankingsReducer } from '@/redux/rankings/slice'
+import { notificationsReducer } from '@/redux/notifications/slice'
 
 const rootReducer = combineReducers({
   teams: teamsReducer,
   matches: matchesReducer,
-  rankings: rankingsReducer
+  rankings: rankingsReducer,
+  notifications: notificationsReducer
 })
 
 export const store = configureStore({

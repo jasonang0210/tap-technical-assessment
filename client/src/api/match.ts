@@ -17,7 +17,7 @@ function MatchesAPI() {
         ),
         patch: (id: number, data: string) => handleRequest(
             client.patch(`${MatchesAPIRoutes}/${id}`, {data: data})
-        )
+        ),
     }
 }
 

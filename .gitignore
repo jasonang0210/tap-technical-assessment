@@ -1,8 +1,10 @@
 ## BACKEND
 
 .venv/
+.env
 *.db
 **/__pycache__/
+migrations/
 
 ## FRONTEND
 

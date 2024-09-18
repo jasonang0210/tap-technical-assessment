@@ -7,6 +7,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { isNil } from "lodash";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const TeamsPage = () => {
     const dispatch: AppDispatch = useDispatch()
@@ -26,7 +27,16 @@ const TeamsPage = () => {
     const [name, setName] = useState<string | null>(null)
 
     const columns: GridColDef[] = [
-        { field: 'name', headerName: 'Name', width: 200 },
+        { 
+            field: 'name',
+            headerName: 'Name',
+            width: 200,
+            renderCell: (params) => (
+                <Link to={`/team/${params.value}`}>
+                    {params.value}
+                </Link>
+            )
+        },
         { field: 'registrationDate', headerName: 'Date of Registration', width: 130 },
         { field: 'group', headerName: 'Group Number', width: 130 },
         { 

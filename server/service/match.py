@@ -4,6 +4,7 @@ from typing import List, Tuple
 from models.route import TeamMatchRouteModel, MatchRouteModel
 from models.database import MatchDatabaseModel, TeamMatchDatabaseModel
 from models.web import MatchWebModel
+from models.database import db
 @singleton
 class MatchService:
     def __init__(self):
@@ -24,20 +25,18 @@ class MatchService:
         return self.db.fetch_all(MatchDatabaseModel, MatchWebModel)
     
     def delete_all(self):
-        with self.db.SessionFactory() as session:
-            session.query(MatchDatabaseModel).delete()
-            session.query(TeamMatchDatabaseModel).delete()
-            session.commit()
+        db.session.query(MatchDatabaseModel).delete()
+        db.session.query(TeamMatchDatabaseModel).delete()
+        db.session.commit()
         
     def patch(self, id: int, team_matches: Tuple[TeamMatchRouteModel, TeamMatchRouteModel]):
-        with self.db.SessionFactory() as session:
-            for team_match in team_matches:
-                team_match.match_id = id
-                (
-                    session
-                        .query(TeamMatchDatabaseModel)
-                        .filter(TeamMatchDatabaseModel.match_id == id)
-                        .filter(TeamMatchDatabaseModel.team_name == team_match.team_name)
-                        .update(team_match.model_dump())
-                )
-            session.commit()
+        for team_match in team_matches:
+            team_match.match_id = id
+            (
+                db.session
+                    .query(TeamMatchDatabaseModel)
+                    .filter(TeamMatchDatabaseModel.match_id == id)
+                    .filter(TeamMatchDatabaseModel.team_name == team_match.team_name)
+                    .update(team_match.model_dump())
+            )
+        db.session.commit()

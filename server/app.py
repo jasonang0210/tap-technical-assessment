@@ -1,15 +1,39 @@
-from flask import Flask, request, jsonify
+from flask import request, jsonify, Flask
 from models.route import TeamRouteModel, TeamMatchRouteModel
-from models.database import TeamDatabaseModel, MatchDatabaseModel
 from service.match import MatchService
 from service.team import TeamService
+from flask import Flask
 from flask_cors import CORS
+from dotenv import load_dotenv
+import os
+from models.database import db, migrate
 
 app = Flask(__name__)
 CORS(app, origins='http://localhost:3001')  # Allow CORS for this origin
 
+load_dotenv()
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
+
+db.init_app(app)
+migrate.init_app(app, db)
+
+with app.app_context():
+    db.create_all()
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
 team_service = TeamService()
 match_service = MatchService()
+
+# from sqlalchemy.engine import Engine
+# from sqlalchemy import event
+
+# @event.listens_for(Engine, "connect")
+# def set_sqlite_pragma(dbapi_connection, connection_record):
+#        cursor = dbapi_connection.cursor()
+#        cursor.execute("PRAGMA foreign_keys=ON")
+#        cursor.close()
 
 @app.route("/teams", methods=['POST'])
 def post_teams():

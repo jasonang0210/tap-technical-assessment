@@ -2,10 +2,18 @@ import { fetchTeam } from "@/redux/teams/actions";
 import { selectTeam, selectTeamIsLoading } from "@/redux/teams/selectors";
 import { AppDispatch } from "@/store";
 import { CircularProgress } from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { isNil } from "lodash";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+
+const columns: GridColDef[] = [
+    { field: 'opponentTeamName', headerName: 'Opponent', width: 130 },
+    { field: 'teamGoals', headerName: 'Goals Scored', width: 130 },
+    { field: 'opponentGoals', headerName: 'Goals Conceded', width: 130 },
+    { field: 'outcome', headerName: 'Outcome', width: 130 }
+  ];
 
 const TeamPage = () => {
     const dispatch: AppDispatch = useDispatch()
@@ -28,14 +36,14 @@ const TeamPage = () => {
             <div>Team Name: {team.name}</div>
             <div>Registration Date: {team.registrationDate}</div>
             <div>Group Number: {team.group}</div>
-            {team.matches.map((match, index) => (
-                <div key={index}>
-                    <div>Team Goal: {match.teamGoals}</div>
-                    <div>Opponent Team: {match.opponentTeamName}</div>
-                    <div>Opponent Goal: {match.opponentGoals}</div>
-                    <div>Outcome: {match.outcome}</div>
-                </div>
-            ))}
+            <DataGrid
+                rows={team.matches ?? []}
+                columns={columns}
+                pageSizeOptions={[5, 10]}
+                checkboxSelection
+                sx={{ border: 0 }}
+                getRowId={row => row.opponentTeamName}
+            />
         </>
     );
 };

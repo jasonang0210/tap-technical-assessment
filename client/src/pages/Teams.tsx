@@ -67,6 +67,7 @@ const TeamsPage = () => {
     return (
         <>
         <Box display="flex" flexDirection="column">
+            <Box alignSelf="center" sx={{ textTransform: 'uppercase', fontSize: 32 }} mb={2}>Teams Page</Box>
             <Box display="flex" flexDirection="column" flex={1}>
                 <TextField
                 label="Input your teams in the format <team> <registration date in DD/MM> <group number>. There should be 1 team per line. "

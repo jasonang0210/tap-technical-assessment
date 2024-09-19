@@ -8,11 +8,24 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
+const mapping = {
+    "Win": "success",
+    "Loss": "error",
+    "Draw": "primary"
+}
+
 const columns: GridColDef[] = [
     { field: 'opponentTeamName', headerName: 'Opponent', flex: 1 },
     { field: 'teamGoals', headerName: 'Goals Scored', flex: 1 },
     { field: 'opponentGoals', headerName: 'Goals Conceded', flex: 1 },
-    { field: 'outcome', headerName: 'Outcome', flex: 1 }
+    { 
+        field: 'outcome',
+        headerName: 'Outcome',
+        flex: 1,
+        renderCell: (params) => (
+            <Chip label={params.value} color={mapping[params.value]} />
+        )
+    }
   ];
 
 const TeamPage = () => {
@@ -33,6 +46,7 @@ const TeamPage = () => {
 
     return (
         <Box display="flex" flexDirection="column">
+            <Box alignSelf="center" sx={{ textTransform: 'uppercase', fontSize: 32 }}>Team Detail Page</Box>
             <Box display="grid" gridTemplateColumns="150px 3fr" gridTemplateRows="auto auto auto" gap={2} m={2}>
                 <Box>Team Name:</Box>
                 <Box>

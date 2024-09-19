@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 import Layout from '@/Layout';
 import { SnackbarProvider } from 'notistack';
 import Notification from '@/components/Notification';
+import HomePage from '@/pages/Home';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
+        element: <HomePage />,
+      },
+      {
+        path: '/rankings',
         element: <RankingsPage />,
       },
       {

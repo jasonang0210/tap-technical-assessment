@@ -41,33 +41,36 @@ const RankingsPage = () => {
     }
 
     return (
-        <Box display="flex">
-            {allRankings.map(ranking => (
-                <Box display="flex" flexDirection="column" alignItems="center" flex={1}>
-                    <Box>Group: {ranking.group}</Box>
-                    <Box width="100%">
-                        <DataGrid
-                            rows={ranking.teams}
-                            columns={columns}
-                            getRowId={row => row.name}
-                            autoHeight
-                            disableColumnMenu
-                            disableColumnSorting
-                            hideFooterPagination
-                            sx={{
-                                border: 0,
-                                m: 2,
-                                fontFamily: "Montserrat, sans-serif", 
-                                fontSize: 14,                    
-                                '& .MuiDataGrid-columnHeaders': {
-                                    fontWeight: 'bold',           
-                                },
-                            }}
-                        />
+        <Box display="flex" flexDirection="column">
+            <Box alignSelf="center" sx={{ textTransform: 'uppercase', fontSize: 32 }} mb={4}>Ranking Page</Box>
+            <Box display="flex">
+                {allRankings.map(ranking => (
+                    <Box display="flex" flexDirection="column" alignItems="center" flex={1}>
+                        <Box>Group: {ranking.group}</Box>
+                        <Box width="100%">
+                            <DataGrid
+                                rows={ranking.teams}
+                                columns={columns}
+                                getRowId={row => row.name}
+                                autoHeight
+                                disableColumnMenu
+                                disableColumnSorting
+                                hideFooterPagination
+                                sx={{
+                                    border: 0,
+                                    m: 2,
+                                    fontFamily: "Montserrat, sans-serif", 
+                                    fontSize: 14,                    
+                                    '& .MuiDataGrid-columnHeaders': {
+                                        fontWeight: 'bold',           
+                                    },
+                                }}
+                            />
+                        </Box>
                     </Box>
-                </Box>
-            )
-            )}
+                )
+                )}
+            </Box>
         </Box>
     );
 };

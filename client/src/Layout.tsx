@@ -12,7 +12,10 @@ const Layout = () => {
         <AppBar position="static">
             <Toolbar>
                 <Box mr={5}>
-                    <Link to="/" replace>Ranking</Link>
+                    <Link to="/" replace>Home</Link>
+                </Box>
+                <Box mr={5}>
+                    <Link to="/rankings" replace>Ranking</Link>
                 </Box>
                 <Box mr={5}>
                     <Link to="/teams" replace>Teams</Link>

@@ -80,6 +80,7 @@ const MatchesPage = () => {
     return (
         <>
         <Box display="flex" flexDirection="column">
+            <Box alignSelf="center" sx={{ textTransform: 'uppercase', fontSize: 32 }} mb={2}>Matches Page</Box>
             <Box display="flex" flexDirection="column" flex={1}>
                 <TextField
                 label="Input your matches in the format <teamA name> <teamB name> <teamA goals> <teamB goals>. There should be 1 match per line. "

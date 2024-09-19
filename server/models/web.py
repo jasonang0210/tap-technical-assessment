@@ -1,5 +1,6 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import List, TypeVar, Optional
+from utils import swap_date_month
 
 class WebModel(BaseModel):
     pass
@@ -13,6 +14,12 @@ class TeamWebModel(WebModel):
     total_points: Optional[int] = Field(default=None) 
     total_goals: Optional[int] = Field(default=None)
     total_alt_points: Optional[int] = Field(default=None)
+
+    @field_validator('registration_date')
+    @classmethod
+    def format_date(cls, registration_date: str) -> str:
+        # unswap the date to DD/MM so that the user will view it in the original format
+        return swap_date_month(registration_date)
 
 class TeamMatchWebModel(WebModel):
     model_config = ConfigDict(from_attributes=True)

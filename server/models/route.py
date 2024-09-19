@@ -1,6 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import List, TypeVar, Tuple, Optional
-
+from constants import INVALID_TEAM_ERROR, INVALID_MATCH_ERROR, INVALID_DATE_ERROR, INVALID_GROUP_ERROR
+from utils import swap_date_month
+import re
 class RouteModel(BaseModel):
     pass
 
@@ -9,11 +11,28 @@ class TeamRouteModel(RouteModel):
     registration_date: str
     group: str
 
+    @field_validator('registration_date')
+    @classmethod
+    def must_be_valid_date(cls, registration_date: str) -> str:
+        pattern = r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])$"
+        if not re.match(pattern, registration_date):
+            raise ValueError(INVALID_DATE_ERROR)
+        
+        # store the date as MM/DD so that simple string ordering would work
+        return swap_date_month(registration_date)
+    
+    @field_validator('group')
+    @classmethod
+    def must_be_valid_group(cls, group: str) -> str:
+        if group not in ["1", "2"]:
+            raise ValueError(INVALID_GROUP_ERROR)
+        return group
+
     @classmethod
     def parse_single(cls, data: str) -> "TeamRouteModel":
         parts = data.split(" ")
         if len(parts) != 3:
-            raise ValueError("Invalid format. Ensure that input data is in the format '<team_name> <registration_date> <group_number>'")
+            raise ValueError(INVALID_TEAM_ERROR)
 
         name, registration_date, group = parts
         return cls(
@@ -29,13 +48,20 @@ class TeamRouteModel(RouteModel):
 class TeamMatchRouteModel(RouteModel):
     team_name: str
     goals: int
-    match_id: Optional[str]
+    match_id: Optional[int]
+
+    @field_validator('goals')
+    @classmethod
+    def must_be_positive_goal(cls, goals: int) -> int:
+        if goals < 0:
+            raise ValueError(INVALID_GROUP_ERROR)
+        return goals
 
     @classmethod
     def parse_single(cls, data: str) -> Tuple["TeamMatchRouteModel", "TeamMatchRouteModel"]:
         parts = data.split(" ")
         if len(parts) != 4:
-            raise ValueError("Invalid format. Ensure that input data is in the format '<teamA_name> <teamB_name> <teamA_goals> <teamB_goals>'")
+            raise ValueError(INVALID_MATCH_ERROR)
 
         return (
             cls(

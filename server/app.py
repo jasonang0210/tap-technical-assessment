@@ -8,10 +8,13 @@ from dotenv import load_dotenv
 import os
 from models.database import db, migrate
 
-app = Flask(__name__)
-CORS(app, origins=['http://localhost:3001'])  # Allow CORS for this origin
-
 load_dotenv()
+
+app = Flask(__name__)
+
+allowed_origin = os.getenv('ALLOWED_ORIGINS', 'http://localhost:3000')
+CORS(app, origins=allowed_origin)  # Allow CORS for this origin
+
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///default.db')
 
 db.init_app(app)
@@ -20,19 +23,8 @@ migrate.init_app(app, db)
 with app.app_context():
     db.create_all()
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
 team_service = TeamService()
 match_service = MatchService()
-
-@app.errorhandler(ValueError)
-def handle_value_error(error):
-    response = {
-        "error": "ValueError",
-        "message": str(error)
-    }
-    return jsonify(response), 400
 
 # TEAMS
 
@@ -90,3 +82,28 @@ def clear_database():
     team_service.delete_all()
     match_service.delete_all()
     return ""
+
+# ERROR HANDLERS
+
+@app.errorhandler(ValueError)
+def handle_value_error(error):
+    error = str(error)
+    pydantic_error = "Value error, "
+    start = error.find(pydantic_error)
+    end = error.find("[type=value_error")
+    if start != -1 and end != -1:
+        start += len(pydantic_error)
+        error = error[start:end]
+    response = {
+        "error": "ValueError",
+        "message": error
+    }
+    return jsonify(response), 400
+
+@app.errorhandler(500)
+def internal_error(error):
+    response = {
+        "error": "ServerError",
+        "message": str(error)
+    }
+    return jsonify(response), 500

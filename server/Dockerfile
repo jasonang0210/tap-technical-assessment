@@ -11,10 +11,12 @@ ENV PIP_NO_CACHE_DIR=on \
 COPY poetry.lock pyproject.toml /
 RUN pip install "poetry==$POETRY_VERSION"
 RUN poetry config virtualenvs.create false && \
-    poetry install --no-dev --no-root
+    poetry install --no-dev
 
 # Step 3: Copy the application code
 COPY . .
 
 # Step 4: Expose the port the app will run on
-EXPOSE 5001
+EXPOSE 5000
+
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]

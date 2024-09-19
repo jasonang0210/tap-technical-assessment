@@ -15,13 +15,13 @@ const Layout = () => {
                     <Link to="/" replace>Home</Link>
                 </Box>
                 <Box mr={5}>
-                    <Link to="/rankings" replace>Ranking</Link>
-                </Box>
-                <Box mr={5}>
                     <Link to="/teams" replace>Teams</Link>
                 </Box>
                 <Box mr={5}>
                     <Link to="/matches" replace>Matches</Link>
+                </Box>
+                <Box mr={5}>
+                    <Link to="/rankings" replace>Ranking</Link>
                 </Box>
                 <Box ml="auto">
                     <ClearDatabase />

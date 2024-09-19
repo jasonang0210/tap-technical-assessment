@@ -1,9 +1,10 @@
+import DataTable from "@/components/DataTable";
 import EditTeam from "@/components/EditTeam";
 import { fetchTeams, postTeams } from "@/redux/teams/actions";
 import { selectAllTeams, selectTeamIsLoading } from "@/redux/teams/selectors";
 import { AppDispatch } from "@/store";
 import { Box, Button, CircularProgress, Drawer, TextField } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import { isNil } from "lodash";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,18 +19,20 @@ const TeamsPage = () => {
     }, [dispatch])
 
     const allTeams = useSelector(selectAllTeams)
-
     const isLoading = useSelector(selectTeamIsLoading);
 
+    // data denotes the text input data, to be filled in by the user to add teams
     const [data, setData] = useState<string>("");
 
+    // name denotes the team name that is currently being edited. null denotes none of the teams are being edited currently
+    const [name, setName] = useState<string | null>(null)
+
     const submitData = async () => {
+        // once submit, wait for submission, then fetch the updated teams
         await dispatch(postTeams(data))
         dispatch(fetchTeams())
         setData("")
     }
-
-    const [name, setName] = useState<string | null>(null)
 
     const columns: GridColDef[] = [
         { 
@@ -79,33 +82,15 @@ const TeamsPage = () => {
                 <Button variant="contained" onClick={submitData}>Add Team(s)</Button>
             </Box>
             <Box flex={1}>
-                <DataGrid
-                    rows={allTeams}
-                    columns={columns}
-                    getRowId={row => row.name}
-                    autoHeight
-                    disableColumnMenu
-                    disableColumnSorting
-                    hideFooterPagination
-                    isRowSelectable={() => false}
-                    sx={{
-                        border: 0,
-                        m: 2,
-                        fontFamily: "Montserrat, sans-serif", 
-                        fontSize: 14,                    
-                        '& .MuiDataGrid-columnHeaders': {
-                            fontWeight: 'bold',           
-                        },
-                    }}
-                />
+                <DataTable data={allTeams} columns={columns} accessor="name"/>
             </Box>
         </Box>
         <Drawer open={!isNil(name)} onClose={() => setName(null)} anchor="bottom"         
             PaperProps={{
-            sx: {
-                height: '30vh',
-                minHeight: '300px'
-            },
+                sx: {
+                    height: '30vh',
+                    minHeight: '300px'
+                },
             }}>
             {!isNil(name) && <EditTeam name={name} onClose={() => setName(null)}/>}
         </Drawer>

@@ -1,8 +1,9 @@
+import DataTable from "@/components/DataTable";
 import { fetchTeam } from "@/redux/teams/actions";
 import { selectTeam, selectTeamIsLoading } from "@/redux/teams/selectors";
 import { AppDispatch } from "@/store";
 import { Box, Chip, CircularProgress } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import { isNil } from "lodash";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,8 +41,17 @@ const TeamPage = () => {
     const team = useSelector(selectTeam(name))
     const isLoading = useSelector(selectTeamIsLoading)
 
-    if (isNil(team) || isLoading) {
+    if (isLoading) {
         return <CircularProgress />
+    }
+
+    if (isNil(team)) {
+        return (
+            <Box display="flex" flexDirection="column">
+                <Box alignSelf="center" sx={{fontSize: 32}} textTransform="uppercase" mb={4}>No data found</Box>
+                <Box alignSelf="center">Ensure that the team name is valid.</Box>
+            </Box>
+        )
     }
 
     return (
@@ -62,25 +72,7 @@ const TeamPage = () => {
                 </Box>
             </Box>
             <Box alignSelf="center">Matches Played</Box>
-            <DataGrid
-                rows={team.matches ?? []}
-                columns={columns}
-                getRowId={row => row.opponentTeamName}
-                autoHeight
-                disableColumnMenu
-                disableColumnSorting
-                hideFooterPagination
-                isRowSelectable={() => false}
-                sx={{
-                    border: 0,
-                    m: 2,
-                    fontFamily: "Montserrat, sans-serif", 
-                    fontSize: 14,                    
-                    '& .MuiDataGrid-columnHeaders': {
-                        fontWeight: 'bold',           
-                    },
-                }}
-            />
+            <DataTable data={team.matches ?? []} columns={columns} accessor="opponentTeamName"/>
         </Box>
     );
 };

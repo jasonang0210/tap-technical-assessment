@@ -12,7 +12,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-allowed_origin = os.getenv('ALLOWED_ORIGINS', 'http://localhost:3000')
+allowed_origin = os.getenv('ALLOWED_ORIGINS', 'http://localhost:3001')
 CORS(app, origins=allowed_origin)  # Allow CORS for this origin
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///default.db')

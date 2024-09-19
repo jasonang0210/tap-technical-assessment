@@ -17,6 +17,6 @@ RUN poetry config virtualenvs.create false && \
 COPY . .
 
 # Step 4: Expose the port the app will run on
-EXPOSE 5000
+EXPOSE 5001
 
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:5001", "app:app"]

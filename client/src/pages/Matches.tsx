@@ -1,9 +1,10 @@
+import DataTable from "@/components/DataTable";
 import EditMatch from "@/components/EditMatch";
 import { fetchMatches, postMatches } from "@/redux/matches/actions";
 import { selectAllMatches, selectMatchIsLoading } from "@/redux/matches/selectors";
 import { AppDispatch } from "@/store";
 import { Box, Button, CircularProgress, Drawer, TextField } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import { isNil } from "lodash";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,23 +13,25 @@ import { useDispatch, useSelector } from "react-redux";
 const MatchesPage = () => {
     const dispatch: AppDispatch = useDispatch()
 
-    const isLoading = useSelector(selectMatchIsLoading);
-
     useEffect(() => {
         dispatch(fetchMatches())
     }, [dispatch])
 
     const allMatches = useSelector(selectAllMatches)
+    const isLoading = useSelector(selectMatchIsLoading);
 
+    // data denotes the text input data, to be filled in by the user to add matches
     const [data, setData] = useState<string>("");
 
+    // id denotes the match id that is currently being edited. null denotes none of the matches are being edited currently
+    const [id, setId] = useState<number | null>(null)
+
     const submitData = async () => {
+        // once submit, wait for submission, then fetch the updated teams
         await dispatch(postMatches(data))
         dispatch(fetchMatches())
         setData("")
     }
-
-    const [id, setId] = useState<number | null>(null)
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'Match ID', width: 100},
@@ -75,7 +78,6 @@ const MatchesPage = () => {
             </Box>
         )
     }
-    
 
     return (
         <>
@@ -92,24 +94,7 @@ const MatchesPage = () => {
                 <Button variant="contained" onClick={submitData}>Add Match(es)</Button>
             </Box>
             <Box flex={1}>
-                <DataGrid
-                    rows={allMatches}
-                    columns={columns}
-                    autoHeight
-                    disableColumnMenu
-                    disableColumnSorting
-                    hideFooterPagination
-                    isRowSelectable={() => false}
-                    sx={{
-                        border: 0,
-                        m: 2,
-                        fontFamily: "Montserrat, sans-serif", 
-                        fontSize: 14,                    
-                        '& .MuiDataGrid-columnHeaders': {
-                            fontWeight: 'bold',           
-                        },
-                    }}
-                />
+                <DataTable data={allMatches} columns={columns} />
             </Box>
         </Box>
         <Drawer open={!isNil(id)} onClose={() => setId(null)} anchor="bottom"         

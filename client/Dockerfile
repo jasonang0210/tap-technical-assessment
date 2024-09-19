@@ -1,7 +1,7 @@
 # Use an official Node.js image as a parent image
 FROM node:20
 
-ENV VITE_API_BASE_URL=http://0.0.0.0:5000
+ENV VITE_API_BASE_URL=http://0.0.0.0:5001
 
 # Copy the package.json and yarn.lock first to leverage Docker cache
 COPY package.json ./
@@ -14,7 +14,7 @@ RUN yarn install
 COPY . .
 
 # Expose the port that Vite's dev server runs on
-EXPOSE 3000
+EXPOSE 3001
 
 # Start the application
 CMD ["sh", "-c", "yarn run build && yarn run preview"]

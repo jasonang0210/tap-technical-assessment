@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: server-app
     environment:
-      - DATABASE_URI=${DATABASE_URI}
+      DATABASE_URI: ${DATABASE_URI}
     ports:
       - "5001:5001"
     command: ["sh", "-c", "flask db upgrade && gunicorn --bind 0.0.0.0:5001 app:app"]
@@ -28,9 +28,9 @@ services:
       dockerfile: Dockerfile
     container_name: postgres-db
     environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:

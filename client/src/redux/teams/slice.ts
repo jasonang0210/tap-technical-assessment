@@ -22,7 +22,7 @@ const teamsSlice = createSlice({
         })
         .addCase(fetchTeams.fulfilled, (state, action: PayloadAction<TeamData[]>) => {
             state.isLoading = false;
-            teamsAdapter.upsertMany(state, action.payload)
+            teamsAdapter.setAll(state, action.payload)
         })
         .addCase(fetchTeams.rejected, (state, action) => {
             state.isLoading = false;

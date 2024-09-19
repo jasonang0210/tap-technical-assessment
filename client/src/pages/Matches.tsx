@@ -1,8 +1,8 @@
 import EditMatch from "@/components/EditMatch";
 import { fetchMatches, postMatches } from "@/redux/matches/actions";
-import { selectAllMatches } from "@/redux/matches/selectors";
+import { selectAllMatches, selectMatchIsLoading } from "@/redux/matches/selectors";
 import { AppDispatch } from "@/store";
-import { Box, Button, Drawer, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, Drawer, TextField } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { isNil } from "lodash";
 import { useEffect, useState } from "react";
@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const MatchesPage = () => {
     const dispatch: AppDispatch = useDispatch()
+
+    const isLoading = useSelector(selectMatchIsLoading);
 
     useEffect(() => {
         dispatch(fetchMatches())
@@ -65,6 +67,14 @@ const MatchesPage = () => {
             )
         },
       ];
+
+    if (isLoading) {
+        return (
+            <Box display="flex" justifyContent="center">
+                <CircularProgress />
+            </Box>
+        )
+    }
     
 
     return (

@@ -1,7 +1,7 @@
 import { fetchRankings } from "@/redux/rankings/actions";
-import { selectAllRankings } from "@/redux/rankings/selectors";
+import { selectAllRankings, selectRankingIsLoading } from "@/redux/rankings/selectors";
 import { AppDispatch } from "@/store";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,11 +24,21 @@ const columns: GridColDef[] = [
 const RankingsPage = () => {
     const dispatch: AppDispatch = useDispatch()
 
+    const isLoading = useSelector(selectRankingIsLoading);
+
     useEffect(() => {
         dispatch(fetchRankings())
     }, [dispatch])
 
     const allRankings = useSelector(selectAllRankings)
+
+    if (isLoading) {
+        return (
+            <Box display="flex" justifyContent="center">
+                <CircularProgress />
+            </Box>
+        )
+    }
 
     return (
         <Box display="flex">

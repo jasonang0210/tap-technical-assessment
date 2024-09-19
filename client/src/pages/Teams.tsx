@@ -1,8 +1,8 @@
 import EditTeam from "@/components/EditTeam";
 import { fetchTeams, postTeams } from "@/redux/teams/actions";
-import { selectAllTeams } from "@/redux/teams/selectors";
+import { selectAllTeams, selectTeamIsLoading } from "@/redux/teams/selectors";
 import { AppDispatch } from "@/store";
-import { Box, Button, Drawer, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, Drawer, TextField } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { isNil } from "lodash";
 import { useEffect, useState } from "react";
@@ -18,6 +18,8 @@ const TeamsPage = () => {
     }, [dispatch])
 
     const allTeams = useSelector(selectAllTeams)
+
+    const isLoading = useSelector(selectTeamIsLoading);
 
     const [data, setData] = useState<string>("");
 
@@ -53,6 +55,14 @@ const TeamsPage = () => {
             )
         },
       ];
+
+    if (isLoading) {
+        return (
+            <Box display="flex" justifyContent="center">
+                <CircularProgress />
+            </Box>
+        )
+    }
 
     return (
         <>

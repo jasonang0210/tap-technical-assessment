@@ -33,7 +33,7 @@ const matchesSlice = createSlice({
         })
         .addCase(fetchMatches.fulfilled, (state, action: PayloadAction<MatchData[]>) => {
             state.isLoading = false;
-            matchesAdapter.upsertMany(state, action.payload)
+            matchesAdapter.setAll(state, action.payload)
         })
         .addCase(fetchMatches.rejected, (state, action) => {
             state.isLoading = false;

@@ -3,6 +3,7 @@ import { selectTeam } from "@/redux/teams/selectors";
 import { AppDispatch } from "@/store";
 import { convertTeamToString } from "@/utils";
 import { Alert, Box, Button, TextField } from "@mui/material";
+import { isNil } from "lodash";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,7 +12,7 @@ const EditTeam = ({name, onClose}) => {
 
     const team = useSelector(selectTeam(name))
 
-    const [data, setData] = useState<string>(convertTeamToString(team));
+    const [data, setData] = useState<string>(!isNil(team) ? convertTeamToString(team) : "");
 
     const submitData = async () => {
         await dispatch(patchTeams({name, data}))

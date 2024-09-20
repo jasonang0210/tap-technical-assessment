@@ -1,50 +1,36 @@
-# React + TypeScript + Vite
+# We Are The Champions: Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This portion of the repository contains the client code for the app.
 
-Currently, two official plugins are available:
+Tools: React, Typescript, Redux
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Code Structure
 
-## Expanding the ESLint configuration
+Generally, it is split up between `pages`, `components`, `api`, and `redux`
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Pages
 
-- Configure the top-level `parserOptions` property like this:
+This is contained within the `/pages` folder.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Every individual page is defined here.
+- Acts as an entry point for the page, along with the main code logic
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Components
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+This is contained within the `/components` folder.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- Acts as an abstraction to the components in `/pages`, to improve readability and modularity.
+
+### API
+
+This is contained within the `/api` folder.
+
+- Makes API calls and serialise the data accordingly.
+- Acts as the main gateway between the client and server.
+
+### Redux
+
+This is contained within the `/redux` folder.
+
+- Stores data within the Redux store.
+- Handles for dispatching of error messages as well.

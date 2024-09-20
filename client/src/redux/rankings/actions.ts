@@ -13,6 +13,6 @@ export const fetchRankings = createAsyncThunk(
         if (isSuccessful(status)) {
             return data
         }
-        return rejectWithValue(error)
+        return rejectWithValue({status, message: error})
     }
 )

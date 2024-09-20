@@ -13,10 +13,13 @@ POSTGRES_DB=testdatabase
 POSTGRES_USER=testuser
 POSTGRES_PASSWORD=testpassword
 DATABASE_URI=postgresql+psycopg2://testuser:testpassword@db:5432/testdatabase
-VITE_API_BASE_URL=http://server:5001
+VITE_API_BASE_URL=http://127.0.0.1:5001
+JWT_SECRET_KEY=67e4b0ed6cfdedd369fdca28208c03a366353eff
 ```
 
 4. Run `docker-compose up --build`
+
+Logging is monitored by PostgreSQL. The config file is within `/database` if you would like to alter the directory of the log file.
 
 ## Deployed Instance on Azure
 
@@ -25,6 +28,8 @@ Alternatively, you can check out the instance hosted on Azure by clicking [here]
 I am using Mac, I'm not sure if there'll be any issues with setting up locally on Windows, hopefully not.
 
 Do reach out to me if there are any issues running it locally or if there are any issues with the hosted instance, thank you!
+
+I've tried my best to ensure that there's no bugs whilst delivering as many features as possible. I'll include a video of me using the app on the Azure hosted instance.
 
 ## Tech Stack
 
@@ -74,11 +79,11 @@ The `docker-compose.yml` in the root directory then handles the concurrent runni
 - Ensure that the application is properly secured.
 - Data should persist across system reboots.
 - Handle invalid input sensibly.
+- Implement an authentication mechanism to keep track of different users and/or roles.
 
 ### Not Implemented
 
 - Provide typo correction suggestions for users in the case of invalid/ambiguous input.
-- Implement an authentication mechanism to keep track of different users and/or roles.
 - Perform static source code analysis and provide scan results as artifacts.
 
 ## Safety Nets
@@ -90,5 +95,4 @@ The `docker-compose.yml` in the root directory then handles the concurrent runni
 
 ## Potential Areas for Improvements
 
-- Authentication: Allow visitors to create an account and login, enabling isolated data management.
 - Form: Actual form with separated input fields for each field, instead of a single multi-line text input, as per dictated by the assessment criteria.

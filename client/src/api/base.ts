@@ -1,14 +1,16 @@
 import { baseURL } from '@/constants';
 
 import axios, { AxiosError, AxiosResponse } from "axios"
-import { Response } from '@/types';
+import { Response, UserDetails } from '@/types';
 import { isNil } from 'lodash';
  
 export function BaseAPI() {
+    const token = localStorage.getItem('tap auth token')
     const client = axios.create({
         baseURL,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            ...(token && {'Authorization': "Bearer " + token})
         }
     })
     return client
@@ -21,12 +23,12 @@ export async function handleRequest<I, O>(
     return request
     .then(({data, status}: AxiosResponse) => ({
         status: String(status),
-        data: !isNil(serializer) ? serializer(data) : undefined
+        data: !isNil(serializer) ? serializer(data) : data
     }))
     .catch((error: AxiosError) => {
         const {response } = error;
         const data = response?.data as { message: string }
-        const message = data.message
+        const message = data?.message ?? "Unexpected Error. Please contact the repository owner to resolve the issue."
         return {
             status: String(response?.status ?? 500),
             error: message
@@ -40,6 +42,12 @@ function GeneralAPI() {
     return {
         clearDatabase: () => handleRequest(
             client.post('/clear_database')
+        ),
+        signup: (data: UserDetails) => handleRequest(
+            client.post('/signup', data)
+        ),
+        login: (data: UserDetails) => handleRequest(
+            client.post('/login', data)
         ),
     }
 }

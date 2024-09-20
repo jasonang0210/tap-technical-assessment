@@ -14,7 +14,7 @@ export const fetchTeams = createAsyncThunk(
         if (isSuccessful(status)) {
             return data
         }
-        return rejectWithValue(error)
+        return rejectWithValue({status, message: error})
     }
 )
 
@@ -29,7 +29,7 @@ export const fetchTeam = createAsyncThunk(
         if (isSuccessful(status)) {
             return data
         }
-        return rejectWithValue(error)
+        return rejectWithValue({status, message: error})
     }
 )
 

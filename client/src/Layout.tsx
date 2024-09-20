@@ -1,4 +1,6 @@
 import ClearDatabase from '@/components/ClearDatabase';
+import Logout from '@/components/Logout';
+import { Chip } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -6,6 +8,9 @@ import { Link, Outlet } from 'react-router-dom';
 
 
 const Layout = () => {
+
+    const token = localStorage.getItem('tap auth token')
+    const username = localStorage.getItem('tap auth username')
 
   return (
     <Box>
@@ -24,7 +29,15 @@ const Layout = () => {
                     <Link to="/rankings" replace>Ranking</Link>
                 </Box>
                 <Box ml="auto">
-                    <ClearDatabase />
+                    { token ?
+                        <Box display="flex" alignItems="center">
+                            <Box mr={2}><Chip label={username} color="primary" variant="outlined"/></Box>
+                            <Box mr={2}><ClearDatabase /></Box>
+                            <Box mr={2}> <Logout /></Box>
+                        </Box>
+                        :
+                        <Link to="/login" replace>Login</Link>
+                    }
                 </Box>
             </Toolbar>
         </AppBar>

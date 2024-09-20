@@ -1,20 +1,28 @@
-from utils import singleton
 from typing import List, Optional
 from models.route import TeamRouteModel
 from models.web import TeamWebModel, TeamDetailedWebModel, RankedGroupWebModel
 from database.team import TeamDatabase
+from utils import append_user_id_to_team_name, remove_user_id_from_team_name
 
-@singleton
 class TeamService:
-    def __init__(self):
-        self.team_db = TeamDatabase()
+    def __init__(self, user_id: int):
+        self.user_id = user_id
+        self.team_db = TeamDatabase(user_id)
 
+    """
+    This method is to ensure that all team names specified have not been used before
+    """
     def _assert_unique_team_name(self, teams: List[TeamRouteModel], exclude: Optional[str] = None):
+        # get the unique team names that come from the client
         team_names = set([team.name for team in teams])
+
+        # get the unique team names that are within the db
         db_team_names = set([team.name for team in self.team_db.fetch_all()])
+        
         if exclude:
             db_team_names.remove(exclude)
         overlapping_team_names = team_names.intersection(db_team_names)
+        overlapping_team_names = [remove_user_id_from_team_name(team_name) for team_name in overlapping_team_names]
         if len(overlapping_team_names) > 0:
             overlapping_team_names_string = ", ".join(overlapping_team_names)
             raise ValueError(f"{overlapping_team_names_string} already exist as team names. The team names must be unique for identifiability.")
@@ -24,6 +32,7 @@ class TeamService:
         self.team_db.post_multiple(teams)
 
     def patch(self, name: str, team: TeamRouteModel):
+        name = append_user_id_to_team_name(name, self.user_id)
         self._assert_unique_team_name([team], exclude=name)
         self.team_db.patch(team, {"name": name})
 
@@ -47,6 +56,7 @@ class TeamService:
         return [RankedGroupWebModel.model_validate(db_model).model_dump() for db_model in db_models]
     
     def fetch_detailed(self, name: str):
+        name = append_user_id_to_team_name(name, self.user_id)
         db_model = {
             **self.fetch_single(name),
             "matches": self.team_db.fetch_team_matches(name)

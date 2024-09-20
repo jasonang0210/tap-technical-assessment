@@ -1,17 +1,16 @@
 from database.base import Database
-from utils import singleton
 from models.route import TeamRouteModel
 from models.database import TeamDatabaseModel, TeamMatchDatabaseModel
 from sqlalchemy.orm import aliased
 from sqlalchemy import func, case, desc, asc
 
-@singleton
 class TeamDatabase(Database[TeamRouteModel, TeamDatabaseModel]):
-    def __init__(self):
-        super().__init__(TeamDatabaseModel)
+    def __init__(self, user_id: int):
+        super().__init__(TeamDatabaseModel, user_id)
 
     def fetch_ranked(self, group: str):
         OpponentMatchDatabaseModel = aliased(TeamMatchDatabaseModel)
+
         return (
             self.session.query(
                 TeamDatabaseModel.name,
@@ -33,6 +32,7 @@ class TeamDatabase(Database[TeamRouteModel, TeamDatabaseModel]):
                     )
                 ).label("total_alt_points"),
             )
+            .filter(TeamDatabaseModel.user_id == self.user_id)
             .join(TeamDatabaseModel.team_matches)
             .join(OpponentMatchDatabaseModel, TeamMatchDatabaseModel.match_id == OpponentMatchDatabaseModel.match_id)
             .filter(TeamMatchDatabaseModel.team_name != OpponentMatchDatabaseModel.team_name)
@@ -45,7 +45,7 @@ class TeamDatabase(Database[TeamRouteModel, TeamDatabaseModel]):
                 asc("registration_date")
             )
         ).all()
-    
+
     def fetch_team_matches(self, name: str):
         OpponentMatchDatabaseModel = aliased(TeamMatchDatabaseModel)
 
@@ -60,9 +60,11 @@ class TeamDatabase(Database[TeamRouteModel, TeamDatabaseModel]):
                     else_="Draw"
                 ).label("outcome")
             )
+            .filter(TeamDatabaseModel.user_id == self.user_id)
             .join(TeamDatabaseModel.team_matches)
             .join(OpponentMatchDatabaseModel, TeamMatchDatabaseModel.match_id == OpponentMatchDatabaseModel.match_id)
             .filter(TeamMatchDatabaseModel.team_name == name)
             .filter(TeamMatchDatabaseModel.team_name != OpponentMatchDatabaseModel.team_name)
         ).all()
+
 

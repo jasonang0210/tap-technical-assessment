@@ -2,7 +2,7 @@ import DataTable from "@/components/DataTable";
 import { fetchRankings } from "@/redux/rankings/actions";
 import { selectAllRankings, selectRankingIsLoading } from "@/redux/rankings/selectors";
 import { AppDispatch } from "@/store";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, Chip, CircularProgress } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +19,16 @@ const columns: GridColDef[] = [
     { field: 'totalGoals', headerName: 'Total Goals', flex: 1 },
     { field: 'totalAltPoints', headerName: 'Total Alternate Points', flex: 1 },
     { field: 'registrationDate', headerName: 'Date of Registration', flex: 1 },
+    { 
+        field: 'outcome', 
+        headerName: 'Outcome', 
+        flex: 1,
+        renderCell: (params) => (
+            params.api.getRowIndexRelativeToVisibleRows(params.id) < 4 ?
+            <Chip label="Qualified" color="success" /> :
+            <Chip label="Eliminated" color="error" />
+        )
+    },
   ];
 
 
@@ -43,7 +53,7 @@ const RankingsPage = () => {
     return (
         <Box display="flex" flexDirection="column">
             <Box alignSelf="center" sx={{ textTransform: 'uppercase', fontSize: 32 }} mb={4}>Ranking Page</Box>
-            <Box display="flex">
+            <Box display="flex" flexDirection="column">
                 {allRankings.map(ranking => (
                     <Box display="flex" flexDirection="column" alignItems="center" flex={1}>
                         <Box>Group: {ranking.group}</Box>

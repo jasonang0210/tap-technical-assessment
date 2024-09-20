@@ -22,6 +22,16 @@ export type NotificationStore = {
     queue: NotificationData[]
 }
 
+export type AuthStore = {
+    count: number;
+    login?: boolean;
+}
+
+export type UserDetails = {
+    username: string;
+    password: string
+}
+
 
 // CLIENT SCHEMA
 

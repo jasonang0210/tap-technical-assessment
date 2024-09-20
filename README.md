@@ -29,7 +29,14 @@ I am using Mac, I'm not sure if there'll be any issues with setting up locally o
 
 Do reach out to me if there are any issues running it locally or if there are any issues with the hosted instance, thank you!
 
-I've tried my best to ensure that there's no bugs whilst delivering as many features as possible. I'll include a video of me using the app on the Azure hosted instance.
+I've tried my best to ensure that there's no bugs whilst delivering as many features as possible. I'll include a video of me using the app locally as proof that it works on my end
+[Video Link](https://vimeo.com/1011380554?share=copy)
+
+## Troubleshooting
+
+If the app really doesn't work, feel free to check out an earlier instance of it! Here's the [link](https://github.com/jasonang0210/tap-technical-assessment/tree/9d2e281c8b29832f19882215936d45baf4a34306) of a previous commit, prior to implementing authentication on the web app. I implemented authentication in a rush and as a result, it might be more prone to unforeseen errors.
+
+Once again, do reach out to me if there's any issues with the web app, I would really appreciate it as I've set aside hours for this and would like for it to work as per intended.
 
 ## Tech Stack
 

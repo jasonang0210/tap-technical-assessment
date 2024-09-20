@@ -1,15 +1,23 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, model_serializer
 from typing import List, TypeVar, Tuple, Optional
 from constants import INVALID_TEAM_ERROR, INVALID_MATCH_ERROR, INVALID_DATE_ERROR, INVALID_GROUP_ERROR
-from utils import swap_date_month
+from utils import swap_date_month, append_user_id_to_team_name
 import re
 class RouteModel(BaseModel):
     pass
 
-class TeamRouteModel(RouteModel):
+class AuthenticatedRouteModel(BaseModel):
+    user_id: int
+
+class TeamRouteModel(AuthenticatedRouteModel):
     name: str
     registration_date: str
     group: str
+
+    @field_validator('name')
+    @classmethod
+    def manipulate_team_name(cls, name, values):
+        return append_user_id_to_team_name(name, values.data.get("user_id"))
 
     @field_validator('registration_date')
     @classmethod
@@ -29,7 +37,7 @@ class TeamRouteModel(RouteModel):
         return group
 
     @classmethod
-    def parse_single(cls, data: str) -> "TeamRouteModel":
+    def parse_single(cls, data: str, user_id: int) -> "TeamRouteModel":
         parts = data.split(" ")
         if len(parts) != 3:
             raise ValueError(INVALID_TEAM_ERROR)
@@ -38,17 +46,23 @@ class TeamRouteModel(RouteModel):
         return cls(
             name=name,
             registration_date=registration_date,
-            group=group
+            group=group,
+            user_id=user_id
         )
 
     @classmethod
-    def parse_multiple(cls, multiple: str) -> List["TeamRouteModel"]:
-        return [cls.parse_single(single) for single in multiple.split("\n")]
+    def parse_multiple(cls, multiple: str, user_id: int) -> List["TeamRouteModel"]:
+        return [cls.parse_single(single, user_id) for single in multiple.split("\n")]
     
-class TeamMatchRouteModel(RouteModel):
+class TeamMatchRouteModel(AuthenticatedRouteModel):
     team_name: str
     goals: int
     match_id: Optional[int]
+
+    @field_validator('team_name')
+    @classmethod
+    def manipulate_team_name(cls, team_name, values):
+        return append_user_id_to_team_name(team_name, values.data.get("user_id"))
 
     @field_validator('goals')
     @classmethod
@@ -58,7 +72,7 @@ class TeamMatchRouteModel(RouteModel):
         return goals
 
     @classmethod
-    def parse_single(cls, data: str) -> Tuple["TeamMatchRouteModel", "TeamMatchRouteModel"]:
+    def parse_single(cls, data: str, user_id: int) -> Tuple["TeamMatchRouteModel", "TeamMatchRouteModel"]:
         parts = data.split(" ")
         if len(parts) != 4:
             raise ValueError(INVALID_MATCH_ERROR)
@@ -67,21 +81,27 @@ class TeamMatchRouteModel(RouteModel):
             cls(
                 team_name=parts[0],
                 goals=int(parts[2]),
-                match_id=None
+                match_id=None,
+                user_id=user_id
             ),
             cls(
                 team_name=parts[1],
                 goals=int(parts[3]),
-                match_id=None
+                match_id=None,
+                user_id=user_id
             )
         )
 
     @classmethod
-    def parse_multiple(cls, multiple: str) -> List[Tuple["TeamMatchRouteModel", "TeamMatchRouteModel"]]:
-        return [cls.parse_single(single) for single in multiple.split("\n")]
+    def parse_multiple(cls, multiple: str, user_id: int) -> List[Tuple["TeamMatchRouteModel", "TeamMatchRouteModel"]]:
+        return [cls.parse_single(single, user_id) for single in multiple.split("\n")]
     
-class MatchRouteModel(RouteModel):
+class MatchRouteModel(AuthenticatedRouteModel):
     # id is autoincremented, so there are no fields
     pass
+
+class UserRouteModel(RouteModel):
+    username: str
+    password: str
 
 RouteModelType = TypeVar('RouteModelType', bound=RouteModel)

@@ -1,10 +1,12 @@
-import { patchMatches, postMatches } from '@/redux/matches/actions';
+import { fetchMatches, patchMatches, postMatches } from '@/redux/matches/actions';
 import { NotificationData } from './../../types';
 
-import { patchTeams, postTeams } from "@/redux/teams/actions";
+import { fetchTeam, fetchTeams, patchTeams, postTeams } from "@/redux/teams/actions";
 import { NotificationStore } from "@/types";
 import { createSlice, Draft } from "@reduxjs/toolkit";
 import { clearDatabase } from '@/redux/notifications/actions';
+import { login, logout, signup } from '@/redux/auth/actions';
+import { fetchRankings } from '@/redux/rankings/actions';
 
 const notificationsInitialState: NotificationStore  = {
     queue: []
@@ -52,6 +54,33 @@ const notificationsSlice = createSlice({
             state.queue.push(action.payload as NotificationData)
         })
         .addCase(clearDatabase.rejected, (state: Draft<NotificationStore>, action) => {
+            state.queue.push(action.payload as NotificationData)
+        })
+        .addCase(signup.fulfilled, (state: Draft<NotificationStore>, action) => {
+            state.queue.push(action.payload as NotificationData)
+        })
+        .addCase(signup.rejected, (state: Draft<NotificationStore>, action) => {
+            state.queue.push(action.payload as NotificationData)
+        })
+        .addCase(login.fulfilled, (state: Draft<NotificationStore>, action) => {
+            state.queue.push(action.payload as NotificationData)
+        })
+        .addCase(login.rejected, (state: Draft<NotificationStore>, action) => {
+            state.queue.push(action.payload as NotificationData)
+        })
+        .addCase(logout.fulfilled, (state: Draft<NotificationStore>, action) => {
+            state.queue.push(action.payload as NotificationData)
+        })
+        .addCase(fetchTeams.rejected, (state: Draft<NotificationStore>, action) => {
+            state.queue.push(action.payload as NotificationData)
+        })
+        .addCase(fetchTeam.rejected, (state: Draft<NotificationStore>, action) => {
+            state.queue.push(action.payload as NotificationData)
+        })
+        .addCase(fetchMatches.rejected, (state: Draft<NotificationStore>, action) => {
+            state.queue.push(action.payload as NotificationData)
+        })
+        .addCase(fetchRankings.rejected, (state: Draft<NotificationStore>, action) => {
             state.queue.push(action.payload as NotificationData)
         })
     }

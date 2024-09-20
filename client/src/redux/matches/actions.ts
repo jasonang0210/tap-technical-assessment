@@ -14,7 +14,8 @@ export const fetchMatches = createAsyncThunk(
         if (isSuccessful(status)) {
             return data
         }
-        return rejectWithValue(error)
+        console.log(error)
+        return rejectWithValue({status, message: error})
     }
 )
 

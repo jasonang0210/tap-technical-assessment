@@ -47,7 +47,7 @@ def signup():
         raise ValueError("Please provide signup details.")
     base_service.signup(UserRouteModel(username=data["username"], password=data["password"])) 
     token = base_service.login(UserRouteModel(username=data["username"], password=data["password"])) 
-    return token
+    return jsonify({"token": token})
 
 # TEAMS
 

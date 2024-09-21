@@ -2,7 +2,19 @@
 
 This is the repository for the GovTech Technology Associate Programe: Technical Assessment for Software Engineer.
 
+## Warning
+
+I realised that my app doesn't render the colours properly for a web app with light theme, which results in some buttons being unable to be seen.
+
+I only found out about it on 21st Sept 2pm and so I've made a commit on 21st Sept 2pm-ish to update only the colours on the web app. It does not affect any functionality at all (only the colours are changed) so I hope that you'll understand and allow for it.
+
+If that is not allowed despite it not affecting any functionality, here is an [older commit](https://github.com/jasonang0210/tap-technical-assessment/tree/a0c0e3ad408fd43e047e4c361a1024597f11dcff) that was done prior to 20 Sept 2024 2359 (the original deadline). I would kindly ask for you to set your browser/computer theme to dark mode so as to see the web app as it is envisioned.
+
+Sorry for the hiccup and I hope you'll understand and give me some leeway with regards to accounting for light theme mode. You can check the changes made in this new commit to ensure that I did not add anything that messes with the functionality.
+
 ## How To Run Locally:
+
+Please ensure your browser/computer theme is switched to dark mode so as to see the web app as it is envisioned.
 
 1. Ensure you have installed `docker` and `docker-compose` by installing the [DockerDesktop](https://www.docker.com/products/docker-desktop/) application
 2. Ensure that the Docker Desktop is running in the background.

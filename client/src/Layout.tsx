@@ -14,7 +14,7 @@ const Layout = () => {
 
   return (
     <Box>
-        <AppBar position="static">
+        <AppBar position="static" color="secondary">
             <Toolbar>
                 <Box mr={5}>
                     <Link to="/" replace>Home</Link>

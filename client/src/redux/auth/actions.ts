@@ -1,4 +1,4 @@
-import { generalAPI } from "@/api/base"
+import { GeneralAPI } from "@/api/base"
 import { UserDetails } from "@/types"
 import { isSuccessful } from "@/utils"
 import { createAsyncThunk } from "@reduxjs/toolkit"
@@ -10,7 +10,7 @@ export const signup = createAsyncThunk(
             data,
             status,
             error
-        } = await generalAPI.signup(userData)
+        } = await GeneralAPI().signup(userData)
         if (isSuccessful(status)) {
             const {token} = data as {token: string}
             localStorage.setItem('tap auth token', token)
@@ -28,7 +28,7 @@ export const login = createAsyncThunk(
             data,
             status,
             error
-        } = await generalAPI.login(userData)
+        } = await GeneralAPI().login(userData)
         if (isSuccessful(status)) {
             const {token} = data as {token: string}
             localStorage.setItem('tap auth token', token)

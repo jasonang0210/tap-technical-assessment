@@ -1,4 +1,4 @@
-import { matchesAPI } from "@/api/match";
+import { MatchesAPI } from "@/api/match";
 import { PatchMatchArgs } from "@/types";
 import { isSuccessful } from "@/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -10,7 +10,7 @@ export const fetchMatches = createAsyncThunk(
             status,
             data,
             error
-        } = await matchesAPI.fetchAll()
+        } = await MatchesAPI().fetchAll()
         if (isSuccessful(status)) {
             return data
         }
@@ -25,7 +25,7 @@ export const postMatches = createAsyncThunk(
         const {
             status,
             error
-        } = await matchesAPI.postMultiple(data)
+        } = await MatchesAPI().postMultiple(data)
         if (isSuccessful(status)) {
             return {status, message: "Matches are successfully created."}
         }
@@ -39,7 +39,7 @@ export const patchMatches = createAsyncThunk(
         const {
             status,
             error
-        } = await matchesAPI.patch(id, data)
+        } = await MatchesAPI().patch(id, data)
         if (isSuccessful(status)) {
             return {status, message: `Match ${id} successfully patched.`}
         }

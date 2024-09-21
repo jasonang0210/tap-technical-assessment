@@ -39,7 +39,7 @@ class MatchService:
         db_teams_tuple = set([tuple(sorted(map(lambda x: x.team_name, match.team_matches))) for match in self.match_db.fetch_all()])
 
         overlapping_team_matches = teams_tuple.intersection(db_teams_tuple)
-        overlapping_team_matches = [map(lambda x: remove_user_id_from_team_name, team_names) for team_names in overlapping_team_matches]
+        overlapping_team_matches = [map(lambda x: remove_user_id_from_team_name(x), team_names) for team_names in overlapping_team_matches]
         if len(overlapping_team_matches) > 0:
             overlapping_team_matches_string = ", ".join(f'({x}, {y})' for x, y in overlapping_team_matches)
             raise ValueError(f"{overlapping_team_matches_string} have played a match before. Each team should only play another team once.")

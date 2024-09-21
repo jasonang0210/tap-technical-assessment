@@ -1,4 +1,4 @@
-import { teamsAPI } from "@/api/team";
+import { TeamsAPI } from "@/api/team";
 import { PatchTeamArgs } from "@/types";
 import { isSuccessful } from "@/utils";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -10,7 +10,7 @@ export const fetchTeams = createAsyncThunk(
             status,
             data,
             error
-        } = await teamsAPI.fetchAll()
+        } = await TeamsAPI().fetchAll()
         if (isSuccessful(status)) {
             return data
         }
@@ -25,7 +25,7 @@ export const fetchTeam = createAsyncThunk(
             status,
             data,
             error
-        } = await teamsAPI.fetchSingle(name)
+        } = await TeamsAPI().fetchSingle(name)
         if (isSuccessful(status)) {
             return data
         }
@@ -39,7 +39,7 @@ export const postTeams = createAsyncThunk(
         const {
             status,
             error
-        } = await teamsAPI.postMultiple(data)
+        } = await TeamsAPI().postMultiple(data)
         if (isSuccessful(status)) {
             return {status, message: "Teams are successfully created."}
         }
@@ -53,7 +53,7 @@ export const patchTeams = createAsyncThunk(
         const {
             status,
             error
-        } = await teamsAPI.patch(name, data)
+        } = await TeamsAPI().patch(name, data)
         if (isSuccessful(status)) {
             return {status, message: `Team ${name} successfully patched.`}
         }

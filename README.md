@@ -2,15 +2,28 @@
 
 This is the repository for the GovTech Technology Associate Programe: Technical Assessment for Software Engineer.
 
-## Warning
+## Bugs Found After Submission Deadline
 
-I realised that my app doesn't render the colours properly for a web app with light theme, which results in some buttons being unable to be seen.
+I would like to first and foremost apologise for the bugs found after the submission deadline. I was rushing through the implementation and hence did not have sufficient time to test out everything prior to submission. I'll go through the individual bug fixes below, but I hope that these mini bugs does not render the rest of the codebase unusable on your end, and I hope that these mini big fixes can be taken into account in my submission. I agree that points should be deducted for bug fixes that come in after the deadline, but I hope that the newest version can be used in order to be able to experience the web app as it was originally intended. You can look at the commit changes accordingly to see that I did not add any breaking changes or add any new functionality, they are merely fixing tiny bugs that might affect the user experience.
 
-I only found out about it on 21st Sept 2pm and so I've made a commit on 21st Sept 2pm-ish to update only the colours on the web app. It does not affect any functionality at all (only the colours are changed) so I hope that you'll understand and allow for it.
+If that is not allowed despite it not affecting any functionality, here is an [older commit](https://github.com/jasonang0210/tap-technical-assessment/tree/a0c0e3ad408fd43e047e4c361a1024597f11dcff) that was done prior to 20 Sept 2024 2359 (the original deadline).
+If that commit is used, I would kindly ask for you to:
 
-If that is not allowed despite it not affecting any functionality, here is an [older commit](https://github.com/jasonang0210/tap-technical-assessment/tree/a0c0e3ad408fd43e047e4c361a1024597f11dcff) that was done prior to 20 Sept 2024 2359 (the original deadline). I would kindly ask for you to set your browser/computer theme to dark mode so as to see the web app as it is envisioned.
+1. Set your browser/computer theme to dark mode so as to see the web app as it is envisioned (After logging in, you should see the `CLEAR DATABASE` and `LOGOUT` button at the top right)
+2. Refresh your browser after logging in or logging out before taking any new actions.
 
-Sorry for the hiccup and I hope you'll understand and give me some leeway with regards to accounting for light theme mode. You can check the changes made in this new commit to ensure that I did not add anything that messes with the functionality.
+### Color Theme Issue for Light Mode
+
+21st Sept 2pm-ish: I realised that my app doesn't render the colours properly for a web app with light theme, which results in some buttons being unable to be seen.
+I've made a commit on 21st Sept 2pm-ish to update only the colours on the web app. It does not affect any functionality at all (only the colours are changed) so I hope that you'll understand and allow for it.
+
+### JWT Token not in localStorage immediately after Login
+
+21st Sept 8pm-ish: I realised that my app doesn't refresh the JWT token in the localStorage automatically after login, so a refresh is needed after log in for the JWT token to take effect. I fixed it by changing my APIs from a const variable initialised immediately, to a function that is called whenever needed.
+
+### Error Message showing Function Name instead of Function Output
+
+21st Sept 8pm-ish: Also I realised that one of the error messages were missing a () hence it was sending back the function name instead of the function output. I added in the () in the backend to return the correct output.
 
 ## How To Run Locally:
 

@@ -4,7 +4,7 @@ import { RankedGroupAPIData, TeamAPIData } from "@/types";
 
 export const TeamsAPIRoutes = 'teams'
 
-function TeamsAPI() {
+export function TeamsAPI() {
     const client = BaseAPI();
 
     return {
@@ -28,5 +28,3 @@ function TeamsAPI() {
         ),
     }
 }
-
-export const teamsAPI = TeamsAPI()

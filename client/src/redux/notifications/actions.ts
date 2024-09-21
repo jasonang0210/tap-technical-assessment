@@ -1,4 +1,4 @@
-import { generalAPI } from "@/api/base"
+import { GeneralAPI } from "@/api/base"
 import { isSuccessful } from "@/utils"
 import { createAsyncThunk } from "@reduxjs/toolkit"
 
@@ -8,7 +8,7 @@ export const clearDatabase = createAsyncThunk(
         const {
             status,
             error
-        } = await generalAPI.clearDatabase()
+        } = await GeneralAPI().clearDatabase()
         if (isSuccessful(status)) {
             return {status, message: `Database successfully cleared.`}
         }

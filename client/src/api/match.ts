@@ -4,7 +4,7 @@ import { MatchAPIData } from "@/types";
 
 export const MatchesAPIRoutes = '/matches'
 
-function MatchesAPI() {
+export function MatchesAPI() {
     const client = BaseAPI();
 
     return {
@@ -20,5 +20,3 @@ function MatchesAPI() {
         ),
     }
 }
-
-export const matchesAPI = MatchesAPI()

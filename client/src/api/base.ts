@@ -28,7 +28,7 @@ export async function handleRequest<I, O>(
     .catch((error: AxiosError) => {
         const {response } = error;
         const data = response?.data as { message: string }
-        const message = data?.message ?? "Unexpected Error. Please contact the repository owner to resolve the issue."
+        const message = data?.message ?? "Unexpected Error. Please refresh the page and try again, or contact the repository owner to resolve the issue if it persists."
         return {
             status: String(response?.status ?? 500),
             error: message
@@ -36,7 +36,7 @@ export async function handleRequest<I, O>(
     })
 }
 
-function GeneralAPI() {
+export function GeneralAPI() {
     const client = BaseAPI();
 
     return {
@@ -51,5 +51,3 @@ function GeneralAPI() {
         ),
     }
 }
-
-export const generalAPI = GeneralAPI()
